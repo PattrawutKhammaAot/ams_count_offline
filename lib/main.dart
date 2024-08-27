@@ -15,8 +15,8 @@ import 'page/main_menu.dart';
 import 'page/report_page.dart';
 import 'page/setting_page.dart';
 
-String uncheck = 'Uncheck';
-String checked = 'Check';
+String status_uncheck = 'Uncheck';
+String status_checked = 'Check';
 String status_open = 'Open';
 String status_close = 'Close';
 String status_count = 'Counting';

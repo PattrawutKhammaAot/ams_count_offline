@@ -143,7 +143,7 @@ class ImportDB {
         user_def_3: null,
         user_def_4: null,
         created_date: current_date,
-        status_check: uncheck,
+        status_check: status_uncheck,
         status_plan: status_open,
       });
     }
@@ -237,11 +237,11 @@ class ImportDB {
     final db = await appDb.database;
     final queryUncheck = await db.rawQuery(
       'SELECT COUNT(*) as count FROM $tableName WHERE $status_check = ?',
-      [uncheck],
+      [status_uncheck],
     );
     final queryChecked = await db.rawQuery(
       'SELECT COUNT(*) as count FROM $tableName WHERE $status_check = ?',
-      [checked],
+      [status_checked],
     );
 
     final queryAllPlan = await db.rawQuery(

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'page/export_page.dart';
 import 'page/setting_page.dart';
+import 'page/transaction/edit_data_count_page.dart';
 
 class Routes {
   static const String home = '/';
@@ -20,6 +21,7 @@ class Routes {
   static const String import = '/import';
   static const String view_detail_import = '/viewImportDetail';
   static const String select_plan = '/selectplan';
+  static const String editPage = '/editPage';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -32,6 +34,7 @@ class Routes {
       setting: (context) => SettingPage(),
       view_detail_import: (context) => ViewImportPage(),
       select_plan: (context) => ListPlanPage(),
+      editPage: (context) => EditDataCountPage(),
     };
   }
 }
