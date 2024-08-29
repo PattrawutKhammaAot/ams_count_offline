@@ -4,6 +4,7 @@ import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:count_offline/component/label.dart';
 import 'package:count_offline/extension/color_extension.dart';
 import 'package:count_offline/model/galleryModel/galleryModel.dart';
+import 'package:count_offline/services/database/gallery_db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:photo_view/photo_view.dart';
@@ -17,9 +18,22 @@ class _GalleryPageState extends State<GalleryPage> {
   List<ViewGalleryModel> _imageList = [];
   List<ViewGalleryModel> _tempimageList = [];
 
+  @override
+  void initState() {
+    GalleryDB().getImage().then((value) {
+      _imageList = value;
+      _tempimageList = value;
+      setState(() {});
+    });
+    // TODO: implement initState
+    super.initState();
+  }
+
   void _serachItemModel(String value) {
-    List<ViewGalleryModel> searchResults =
-        _tempimageList.where((element) => element.asset == value).toList();
+    List<ViewGalleryModel> searchResults = _tempimageList
+        .where((element) =>
+            element.asset != null && element.asset!.contains(value))
+        .toList();
     if (searchResults.isNotEmpty) {
       _imageList = searchResults;
     } else {
@@ -94,9 +108,11 @@ class _GalleryPageState extends State<GalleryPage> {
                                                   children: [
                                                     Expanded(
                                                       child: PhotoView(
-                                                        imageProvider:
-                                                            FileImage(File(
-                                                                "${_imageList[index].imageFile}")),
+                                                        imageProvider: Image
+                                                                .memory(_imageList[
+                                                                        index]
+                                                                    .imageFile!)
+                                                            .image,
                                                       ),
                                                     ),
                                                     Label(
@@ -111,6 +127,11 @@ class _GalleryPageState extends State<GalleryPage> {
                                                           MainAxisAlignment.end,
                                                       children: [
                                                         ElevatedButton(
+                                                            style: ButtonStyle(
+                                                                backgroundColor:
+                                                                    MaterialStateProperty.all(
+                                                                        AppColors
+                                                                            .contentColorBlue)),
                                                             onPressed: () =>
                                                                 Navigator.pop(
                                                                     context),
@@ -124,8 +145,8 @@ class _GalleryPageState extends State<GalleryPage> {
                                           },
                                         );
                                       },
-                                      child: _showImage(
-                                          '${_imageList[index].imageFile}'),
+                                      child: Image.memory(
+                                          _imageList[index].imageFile!),
                                     )),
                               ),
                             )),
@@ -153,9 +174,5 @@ class _GalleryPageState extends State<GalleryPage> {
               })
           : Container(),
     );
-  }
-
-  Widget _showImage(String imagePath) {
-    return Image.file(File(imagePath));
   }
 }

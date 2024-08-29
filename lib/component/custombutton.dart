@@ -7,11 +7,13 @@ class CustomButton extends StatelessWidget {
     this.onPressed,
     this.text,
     this.icon,
+    this.isUseIcon = true,
   });
   Function()? onPressed;
   String? text;
   Color? color;
   IconData? icon;
+  bool isUseIcon;
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -22,13 +24,17 @@ class CustomButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            color: Colors.white,
-          ),
-          SizedBox(
-            width: 5,
-          ),
+          isUseIcon
+              ? Icon(
+                  icon,
+                  color: Colors.white,
+                )
+              : SizedBox.fromSize(),
+          isUseIcon
+              ? SizedBox(
+                  width: 5,
+                )
+              : SizedBox.fromSize(),
           Text(
             "${text!}",
             style: TextStyle(color: Colors.white),

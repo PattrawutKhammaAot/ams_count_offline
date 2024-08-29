@@ -149,8 +149,23 @@ class _ListPlanPageState extends State<ListPlanPage> {
                             return itemPlan.isNotEmpty
                                 ? GestureDetector(
                                     onTap: () async {
-                                      Navigator.pushNamed(context, Routes.count,
-                                          arguments: itemPlan[index].plan);
+                                      await Navigator.pushNamed(
+                                              context, Routes.count,
+                                              arguments: itemPlan[index].plan)
+                                          .then((v) async {
+                                        await ImportDB()
+                                            .getSummaryViewOnSelectPlan()
+                                            .then((value) {
+                                          setState(() {
+                                            itemSum = value;
+                                          });
+                                        });
+                                        await CountDB().getList().then((value) {
+                                          setState(() {
+                                            itemPlan = value;
+                                          });
+                                        });
+                                      });
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -177,7 +192,7 @@ class _ListPlanPageState extends State<ListPlanPage> {
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                      "Code : ${itemPlan[index].plan}"),
+                                                      "Plan : ${itemPlan[index].plan}"),
                                                 ),
                                                 Row(
                                                     mainAxisAlignment:
@@ -189,7 +204,7 @@ class _ListPlanPageState extends State<ListPlanPage> {
                                                             const EdgeInsets
                                                                 .all(8.0),
                                                         child: Text(
-                                                            "Date :${itemPlan[index].createdDate}"),
+                                                            "Created : ${itemPlan[index].createdDate}"),
                                                       ),
                                                       Align(
                                                         alignment:

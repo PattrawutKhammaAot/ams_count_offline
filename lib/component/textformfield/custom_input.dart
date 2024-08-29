@@ -8,6 +8,7 @@ class Custominput extends StatelessWidget {
     this.onSubmitted,
     this.onEditingComplete,
     this.controller,
+    this.readOnly,
   });
 
   TextEditingController? controller;
@@ -15,11 +16,18 @@ class Custominput extends StatelessWidget {
   Function(String)? onSubmitted;
   Function()? onEditingComplete;
   FocusNode? focusNode;
+  bool? readOnly;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 40,
       child: TextField(
+        readOnly: readOnly ?? false,
+        enabled: readOnly != null
+            ? readOnly!
+                ? false
+                : true
+            : true,
         controller: controller,
         decoration: InputDecoration(
           border: OutlineInputBorder(),

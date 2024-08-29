@@ -3,13 +3,13 @@ import 'package:count_offline/page/gallery_page.dart';
 import 'package:count_offline/page/import/import_page.dart';
 import 'package:count_offline/page/import/view_import_page.dart';
 import 'package:count_offline/page/loading_page.dart';
-import 'package:count_offline/page/report_page.dart';
+import 'package:count_offline/page/report/report_page.dart';
 import 'package:count_offline/page/transaction/listplan_page.dart';
 import 'package:flutter/material.dart';
 
 import 'page/export_page.dart';
 import 'page/setting_page.dart';
-import 'page/transaction/edit_data_count_page.dart';
+import 'page/report/edit_data_count_page.dart';
 
 class Routes {
   static const String home = '/';

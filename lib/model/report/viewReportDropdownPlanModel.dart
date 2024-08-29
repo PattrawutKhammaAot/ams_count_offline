@@ -4,25 +4,25 @@
 
 import 'dart:convert';
 
-ViewReportListPlan viewReportListPlanFromJson(String str) =>
-    ViewReportListPlan.fromJson(json.decode(str));
+ViewReportDropdownPlanModel viewReportListPlanFromJson(String str) =>
+    ViewReportDropdownPlanModel.fromJson(json.decode(str));
 
-String viewReportListPlanToJson(ViewReportListPlan data) =>
+String viewReportListPlanToJson(ViewReportDropdownPlanModel data) =>
     json.encode(data.toJson());
 
-class ViewReportListPlan {
+class ViewReportDropdownPlanModel {
   String? plan;
   int? uncheck;
   int? check;
 
-  ViewReportListPlan({
+  ViewReportDropdownPlanModel({
     this.plan,
     this.uncheck,
     this.check,
   });
 
-  factory ViewReportListPlan.fromJson(Map<String, dynamic> json) =>
-      ViewReportListPlan(
+  factory ViewReportDropdownPlanModel.fromJson(Map<String, dynamic> json) =>
+      ViewReportDropdownPlanModel(
         plan: json["Plan"],
         uncheck: json["Uncheck"],
         check: json["Check"],

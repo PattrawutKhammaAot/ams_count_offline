@@ -1,27 +1,29 @@
-import 'package:count_offline/component/custom_alertdialog.dart';
-import 'package:count_offline/component/custom_botToast.dart';
-import 'package:count_offline/component/custom_camera.dart';
+import 'dart:convert';
+
 import 'package:count_offline/component/custombutton.dart';
-import 'package:count_offline/component/textformfield/custom_input.dart';
-import 'package:count_offline/extension/color_extension.dart';
-import 'package:count_offline/model/count/countModelEvent.dart';
-import 'package:count_offline/model/count/responseCountModel.dart';
-import 'package:count_offline/model/department/departmentModel.dart';
-import 'package:count_offline/model/location/locationModel.dart';
-import 'package:count_offline/services/database/count_db.dart';
-import 'package:count_offline/services/database/department_db.dart';
-import 'package:count_offline/services/database/gallery_db.dart';
-import 'package:count_offline/services/database/location_db.dart';
+import 'package:count_offline/model/report/viewReportEditModel.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-class CountPage extends StatefulWidget {
+import '../../component/custom_alertdialog.dart';
+import '../../component/custom_botToast.dart';
+import '../../component/custom_camera.dart';
+import '../../component/textformfield/custom_input.dart';
+import '../../extension/color_extension.dart';
+import '../../model/count/countModelEvent.dart';
+import '../../services/database/count_db.dart';
+import '../../services/database/gallery_db.dart';
+
+class EditDataCountPage extends StatefulWidget {
+  const EditDataCountPage({super.key});
+
   @override
-  State<CountPage> createState() => _CountPageState();
+  State<EditDataCountPage> createState() => _EditDataCountPageState();
 }
 
-class _CountPageState extends State<CountPage> {
+class _EditDataCountPageState extends State<EditDataCountPage> {
+  Map<String, dynamic> dataJson = {"plan": '', "asset": ''};
+
   TextEditingController barcodeController = TextEditingController();
   TextEditingController assetNoController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -33,8 +35,6 @@ class _CountPageState extends State<CountPage> {
   TextEditingController checkController = TextEditingController();
   TextEditingController scanDateController = TextEditingController();
 
-  List<LocationModel> location = [];
-  List<DepartmentModel> department = [];
   final List<GlobalObjectKey<FormState>> formKeyList =
       List.generate(10, (index) => GlobalObjectKey<FormState>(index));
   String? plan;
@@ -49,64 +49,54 @@ class _CountPageState extends State<CountPage> {
   FocusNode _qtyFocus = FocusNode();
   FocusNode _capDateFocus = FocusNode();
   FocusNode _remarkFocus = FocusNode();
-  FocusNode _checkFocus = FocusNode();
-  FocusNode _scanDateFocus = FocusNode();
-
+  ViewReportEditModel itemModel = ViewReportEditModel();
   @override
   void initState() {
-    LocationDB().getLocation().then((value) {
-      location = value;
-      setState(() {});
-    });
-    DepartmenDB().getDepartment().then((value) {
-      department = value;
-      setState(() {});
-    });
-
-    Future.microtask(() {
-      final args = ModalRoute.of(context)?.settings.arguments as String?;
-      if (args != null) {
-        setState(() {
-          plan = args;
-        });
-      }
-    });
-    _barcodeFocus.requestFocus();
+    setValue();
+    // TODO: implement initState
     super.initState();
   }
 
-  Future onChangeValue() async {
-    ResponseCountModel item = await CountDB().scanBarcode(
-        CountModelEvent(
-          barcode: barcodeController.text.toUpperCase(),
-          plan: plan,
-          location: _selectedLocation,
-          department: _selectedDepartment,
-          statusAsset: selectedStatus,
-          qty: qtyController.text,
-          // remark: remarkController.text,
-        ),
-        context);
-    assetNoController.text = item.asset ?? "";
-    nameController.text = item.name ?? "";
-    costCenterController.text = item.costCenter ?? "";
-    departmentController.text = item.department ?? "";
-    qtyController.text =
-        (item.qty == null || item.qty == "null" || item.qty == "")
+  Future setValue() async {
+    Future.microtask(() async {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args != null) {
+        dataJson = jsonDecode(jsonEncode(args));
+        plan = dataJson['plan'];
+        assetNoController.text = dataJson['asset'];
+        itemModel = await CountDB()
+            .getAssetEdit(plan: plan!, asset: assetNoController.text);
+
+        nameController.text = itemModel.description ?? "";
+        costCenterController.text = itemModel.costCenter ?? "";
+        departmentController.text = itemModel.departmen ?? "";
+        qtyController.text = (itemModel.qty == null ||
+                itemModel.qty == "null" ||
+                itemModel.qty == "")
             ? ""
-            : item.qty!;
-    capDateController.text = (item.cap_date == null ||
-            item.cap_date == "null" ||
-            item.cap_date == "")
-        ? ""
-        : item.cap_date!;
-    remarkController.text =
-        (item.remark == null || item.remark == "null" || item.remark == "")
+            : itemModel.qty!;
+        capDateController.text = (itemModel.cap == null ||
+                itemModel.cap == "null" ||
+                itemModel.cap == "")
             ? ""
-            : item.remark!;
-    checkController.text = item.check ?? "";
-    scanDateController.text = item.scanDate ?? "";
-    setState(() {});
+            : itemModel.cap!;
+        remarkController.text = (itemModel.remark == null ||
+                itemModel.remark == "null" ||
+                itemModel.remark == "")
+            ? ""
+            : itemModel.remark!;
+        checkController.text = itemModel.statusCheck ?? "";
+        scanDateController.text = itemModel.scanDate ?? "";
+
+        selectedStatus = itemModel.statusAsset ?? "ปกติ";
+
+        _selectedDepartment = itemModel.countDepartment;
+        _selectedLocation = itemModel.countLocation;
+
+        _remarkFocus.requestFocus();
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -162,29 +152,6 @@ class _CountPageState extends State<CountPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    Custominput(
-                      labelText: "Barcode",
-                      controller: barcodeController,
-                      focusNode: _barcodeFocus,
-                      onEditingComplete: () async {
-                        if (formKeyList[1].currentState!.validate()) {
-                          if ((_selectedDepartment != null &&
-                                  _selectedDepartment!.isNotEmpty) ||
-                              (_selectedLocation != null &&
-                                  _selectedLocation!.isNotEmpty)) {
-                            await onChangeValue();
-                          } else {
-                            const CustomAlertDialog(
-                              title: "Warning !",
-                              message: "Please select location or department",
-                              isWarning: true,
-                            ).show(context);
-                          }
-                        }
-
-                        barcodeController.clear();
-                      },
-                    ),
                     const SizedBox(height: 10),
                     Custominput(
                       focusNode: _assetNoFocus,
@@ -238,7 +205,10 @@ class _CountPageState extends State<CountPage> {
                     dropdownStatus(),
                     SizedBox(height: 10),
                     Custominput(
-                        labelText: "Remark", controller: remarkController),
+                      labelText: "Remark",
+                      controller: remarkController,
+                      focusNode: _remarkFocus,
+                    ),
                     SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -279,13 +249,8 @@ class _CountPageState extends State<CountPage> {
             }, onCamera: () async {
               var result = await CustomCamera().pickFileFromCamera();
               if (result != '') {
-                var isSuccess = await GalleryDB()
+                await GalleryDB()
                     .insertImage(result.path, plan!, assetNoController.text);
-                if (isSuccess) {
-                  CustomBotToast.showSuccess("Update Image Success");
-                } else {
-                  CustomBotToast.showError("Failed to Update");
-                }
               }
             }),
           ],
@@ -309,24 +274,18 @@ class _CountPageState extends State<CountPage> {
           textAlign: TextAlign.center,
         ),
         decoration: InputDecoration(
+          enabled: false,
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
           ),
         ),
-        items: location
-            .map((LocationModel item) => DropdownMenuItem<String>(
-                  value: item.location,
-                  child: Text(
-                    "Location : ${item.location!}",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ))
-            .toList(),
+        items: [
+          DropdownMenuItem<String>(
+            value: _selectedLocation,
+            child: Text(_selectedLocation ?? "--- No data ---"),
+          ),
+        ],
         value: _selectedLocation,
         onChanged: (value) async {
           _selectedLocation = value.toString();
@@ -374,24 +333,18 @@ class _CountPageState extends State<CountPage> {
           textAlign: TextAlign.center,
         ),
         decoration: InputDecoration(
+          enabled: false,
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
           ),
         ),
-        items: department
-            .map((DepartmentModel item) => DropdownMenuItem<String>(
-                  value: item.department,
-                  child: Text(
-                    "Department : ${item.department!}",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ))
-            .toList(),
+        items: [
+          DropdownMenuItem<String>(
+            value: _selectedDepartment,
+            child: Text(_selectedDepartment ?? "--- No data ---"),
+          ),
+        ],
         value: _selectedDepartment,
         onChanged: (value) {
           if (value != null) {

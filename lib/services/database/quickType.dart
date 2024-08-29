@@ -9,3 +9,13 @@ class QuickTypes {
 
   static const String dbFileName = 'AmsPDA.db';
 }
+
+class StatusCheck {
+  static const String status_uncheck = 'Uncheck';
+  static const String status_checked = 'Checked';
+  static const String status_open = 'Open';
+  static const String status_close = 'Close';
+  static const String status_count = 'Counting';
+}
+
+enum TypeAlert { success, warning, error }

@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:count_offline/page/loading_page.dart';
 import 'package:count_offline/routes.dart';
 import 'package:count_offline/services/database/sqlite_db.dart';
@@ -12,22 +13,20 @@ import 'page/export_page.dart';
 import 'page/gallery_page.dart';
 import 'page/import/import_page.dart';
 import 'page/main_menu.dart';
-import 'page/report_page.dart';
+import 'page/report/report_page.dart';
 import 'page/setting_page.dart';
 
-String status_uncheck = 'Uncheck';
-String status_checked = 'Check';
-String status_open = 'Open';
-String status_close = 'Close';
-String status_count = 'Counting';
-
 DbSqlite appDb = DbSqlite();
+
+final easyLoading = EasyLoading.init();
+final botToast = BotToastInit();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await appDb.initializeDatabase();
   final RouteObserver<PageRoute> routeObserver = CustomRouteObserver();
   configLoading();
+
   return runApp(EasyLocalization(
     supportedLocales: [Locale('en'), Locale('th')],
     path: 'assets/translations',
@@ -35,9 +34,13 @@ void main() async {
     child: ChangeNotifierProvider<ThemeNotifier>(
       create: (_) => ThemeNotifier(),
       child: MaterialApp(
-        builder: EasyLoading.init(),
+        builder: (context, child) {
+          child = easyLoading(context, child);
+          child = botToast(context, child);
+          return child;
+        },
         initialRoute: Routes.home,
-        navigatorObservers: [routeObserver],
+        navigatorObservers: [routeObserver, BotToastNavigatorObserver()],
         routes: Routes.getRoutes(),
       ),
     ),
