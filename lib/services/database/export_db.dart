@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:android_path_provider/android_path_provider.dart';
 import 'package:count_offline/main.dart';
 import 'package:count_offline/model/export/exportModel.dart';
 import 'package:count_offline/services/database/gallery_db.dart';
@@ -199,7 +200,8 @@ class ExportDB {
       final List<int> bytes = workbook.saveAsStream();
       workbook.dispose();
       // Get the downloads directory
-      final Directory? downloadsDir = await getDownloadsDirectory();
+      final Directory? downloadsDir = Directory(
+          "${await AndroidPathProvider.documentsPath}/countOfflineImage");
 
       if (downloadsDir == null) {
         EasyLoading.showError('Downloads directory not found',
@@ -308,7 +310,7 @@ class ExportDB {
     try {
       // Path ที่ต้องการบันทึกไฟล์รูปภาพ
       final String folderPath =
-          '/storage/emulated/0/Pictures/countOfflineImage';
+          '${await AndroidPathProvider.documentsPath}/countOfflineImage/image';
       final Directory directory = Directory(folderPath);
 
       // สร้างโฟลเดอร์ถ้ายังไม่มี
@@ -322,7 +324,7 @@ class ExportDB {
 
       // บันทึกไฟล์รูปภาพ
       await file.writeAsBytes(imageBytes);
-      print('Image saved at $filePath');
+
       return filePath; // คืนค่า path ของไฟล์ที่บันทึก
     } catch (e) {
       print('Error saving image: $e');
@@ -332,17 +334,22 @@ class ExportDB {
 
   Future<void> createFolderInPath() async {
     try {
-      // Path ที่ต้องการสร้างโฟลเดอร์
-      final String folderPath =
-          '/storage/emulated/0/Pictures/countOfflineImage';
+      // Path ที่ต้องการสร้างโฟลเดอร์หลัก
+      final String mainFolderPath =
+          '${await AndroidPathProvider.documentsPath}/countOfflineImage';
+      // Path ที่ต้องการสร้างโฟลเดอร์ย่อย
+      final String subFolderPath = '$mainFolderPath/image';
 
-      // สร้างโฟลเดอร์
-      final Directory newDirectory = Directory(folderPath);
-      if (!await newDirectory.exists()) {
-        await newDirectory.create(recursive: true);
-        print('Folder created at $folderPath');
-      } else {
-        print('Folder already exists at $folderPath');
+      // สร้างโฟลเดอร์หลัก
+      final Directory mainDirectory = Directory(mainFolderPath);
+      if (!await mainDirectory.exists()) {
+        await mainDirectory.create(recursive: true);
+      }
+
+      // สร้างโฟลเดอร์ย่อย
+      final Directory subDirectory = Directory(subFolderPath);
+      if (!await subDirectory.exists()) {
+        await subDirectory.create(recursive: true);
       }
     } catch (e) {
       print('Error creating folder: $e');

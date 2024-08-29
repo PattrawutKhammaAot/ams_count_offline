@@ -54,6 +54,7 @@ dependencies:
   bot_toast: ^4.1.3
   syncfusion_flutter_xlsio: ^26.2.11
   path_provider: ^2.1.4
+  android_path_provider: ^0.3.0
 
 dev_dependencies:
   flutter_test:
