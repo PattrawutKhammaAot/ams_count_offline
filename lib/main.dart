@@ -5,6 +5,7 @@ import 'package:count_offline/services/database/sqlite_db.dart';
 import 'package:count_offline/services/theme/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -35,6 +36,7 @@ void main() async {
       create: (_) => ThemeNotifier(),
       child: MaterialApp(
         builder: (context, child) {
+          requestStoragePermission();
           child = easyLoading(context, child);
           child = botToast(context, child);
           return child;
@@ -45,6 +47,20 @@ void main() async {
       ),
     ),
   ));
+}
+
+Future<void> requestStoragePermission() async {
+  try {
+    var status = await Permission.manageExternalStorage.status;
+    if (!status.isGranted) {
+      if (await Permission.manageExternalStorage.request().isGranted) {
+      } else {
+        openAppSettings();
+      }
+    }
+  } catch (e, s) {
+    print("$e$s");
+  }
 }
 
 void configLoading() {

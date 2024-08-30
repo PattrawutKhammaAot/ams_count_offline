@@ -3,6 +3,8 @@ import 'package:count_offline/component/custombutton.dart';
 import 'package:count_offline/extension/color_extension.dart';
 import 'package:count_offline/services/database/export_db.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ExportPage extends StatefulWidget {
   @override
@@ -70,7 +72,8 @@ class _ExportPageState extends State<ExportPage> {
                     text: "Export to Excel",
                     color: AppColors.contentColorBlue,
                     onPressed: () async {
-                      await ExportDB().createFolderInPath();
+                      EasyLoading.show(status: 'loading data ...');
+                      await ExportDB().createFolderInDocument();
                       await ExportDB().ExportAllAssetByPlan(selectedValue!);
                     },
                   )

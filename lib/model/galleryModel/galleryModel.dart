@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 class ViewGalleryModel {
   String? plan;
   String? asset;
-  Uint8List? imageFile;
+  String? imageFile;
   String? createdDate;
 
   ViewGalleryModel({

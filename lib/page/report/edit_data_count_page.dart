@@ -248,9 +248,15 @@ class _EditDataCountPageState extends State<EditDataCountPage> {
               _barcodeFocus.requestFocus();
             }, onCamera: () async {
               var result = await CustomCamera().pickFileFromCamera();
-              if (result != '') {
-                await GalleryDB()
+
+              if (result != null) {
+                var isSuccess = await GalleryDB()
                     .insertImage(result.path, plan!, assetNoController.text);
+                if (isSuccess) {
+                  CustomBotToast.showSuccess("Update Image Success");
+                } else {
+                  CustomBotToast.showError("Failed to Upload");
+                }
               }
             }),
           ],

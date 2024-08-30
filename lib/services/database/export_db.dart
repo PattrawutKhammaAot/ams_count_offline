@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:android_path_provider/android_path_provider.dart';
 import 'package:count_offline/main.dart';
 import 'package:count_offline/model/export/exportModel.dart';
 import 'package:count_offline/services/database/gallery_db.dart';
@@ -14,6 +13,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
 class ExportDB {
+  final String mainFolderPath = '/storage/emulated/0/ams_export';
+  final String text_name = 'folder:ams_export';
+
   Future<List<String>> getPlan() async {
     final db = await appDb.database;
     final resultPlan = await db.query(ImportDB.field_tableName,
@@ -89,15 +91,18 @@ class ExportDB {
 
           // Fetch image bytes for the corresponding asset
           if (images.isNotEmpty) {
-            var imageFile = images.firstWhere(
+            var imageFilePath = images.firstWhere(
               (image) =>
                   image[GalleryDB.field_asset] ==
                   assets[i][ImportDB.field_asset],
               orElse: () => <String, Object?>{},
-            )[GalleryDB.field_image_file];
+            )[GalleryDB.field_image_file_path];
 
-            if (imageFile != null && imageFile is List<int>) {
-              imageBytes = Uint8List.fromList(imageFile);
+            if (imageFilePath != null && imageFilePath is String) {
+              File imageFile = File(imageFilePath);
+              if (await imageFile.exists()) {
+                imageBytes = await imageFile.readAsBytes();
+              }
             }
           }
 
@@ -195,31 +200,24 @@ class ExportDB {
         // Move to the next batch of data
         offset += batchSize;
       }
-
+      await createFolderInDocument();
       // Save Excel file with the added images
       final List<int> bytes = workbook.saveAsStream();
       workbook.dispose();
-      // Get the downloads directory
-      final Directory? downloadsDir = Directory(
-          "${await AndroidPathProvider.documentsPath}/countOfflineImage");
 
-      if (downloadsDir == null) {
-        EasyLoading.showError('Downloads directory not found',
-            maskType: EasyLoadingMaskType.black);
-
-        return;
-      }
+      // Path ที่ต้องการบันทึกไฟล์
+      final String downloadPath = path.join(mainFolderPath);
 
       String baseFileName = 'export-$plan';
       String fileExtension = '.xlsx';
       String outputFile =
-          path.join(downloadsDir.path, '$baseFileName$fileExtension');
+          path.join(downloadPath, '$baseFileName$fileExtension');
       int fileIndex = 1;
 
       // Check if file already exists and find a unique file name
       while (File(outputFile).existsSync()) {
-        outputFile = path.join(
-            downloadsDir.path, '$baseFileName($fileIndex)$fileExtension');
+        outputFile =
+            path.join(downloadPath, '$baseFileName($fileIndex)$fileExtension');
         fileIndex++;
       }
 
@@ -227,7 +225,8 @@ class ExportDB {
       File(outputFile).writeAsBytesSync(bytes);
 
       // Dismiss loading
-      EasyLoading.showSuccess('Exported to $outputFile',
+      EasyLoading.showSuccess(
+          'Exported to $text_name $baseFileName($fileIndex)$fileExtension',
           maskType: EasyLoadingMaskType.black);
     } catch (e, s) {
       print(e);
@@ -269,28 +268,30 @@ class ExportDB {
 
         for (var image in images) {
           final asset = image[GalleryDB.field_asset];
-          final imageFile = image[GalleryDB.field_image_file];
+          final imageFilePath = image[GalleryDB.field_image_file_path];
 
           // Set asset and plan
           worksheet.getRangeByIndex(currentRow, 1).setText(plan);
           worksheet.getRangeByIndex(currentRow, 1).columnWidth = 25;
           worksheet.getRangeByIndex(currentRow, 2).setText(asset.toString());
-
           worksheet.getRangeByIndex(currentRow, 2).columnWidth = 25;
 
           // Insert image if it exists
-          if (imageFile != null && imageFile is List<int>) {
-            final Uint8List imageBytes = Uint8List.fromList(imageFile);
-            final xlsio.Picture picture =
-                worksheet.pictures.addStream(currentRow, 3, imageBytes);
+          if (imageFilePath != null && imageFilePath is String) {
+            File imageFile = File(imageFilePath);
+            if (await imageFile.exists()) {
+              final Uint8List imageBytes = await imageFile.readAsBytes();
+              final xlsio.Picture picture =
+                  worksheet.pictures.addStream(currentRow, 3, imageBytes);
 
-            // Set the size of the picture
-            picture.width = 150;
-            picture.height = 150;
+              // Set the size of the picture
+              picture.width = 150;
+              picture.height = 150;
 
-            // Adjust the row height and column width to fit the picture
-            worksheet.getRangeByIndex(currentRow, 3).rowHeight = 75;
-            worksheet.getRangeByIndex(currentRow, 3).columnWidth = 25;
+              // Adjust the row height and column width to fit the picture
+              worksheet.getRangeByIndex(currentRow, 3).rowHeight = 100;
+              worksheet.getRangeByIndex(currentRow, 3).columnWidth = 25;
+            }
           }
 
           currentRow++;
@@ -308,35 +309,33 @@ class ExportDB {
   Future<String> exportImageToFolder(
       Uint8List imageBytes, String fileName) async {
     try {
-      // Path ที่ต้องการบันทึกไฟล์รูปภาพ
-      final String folderPath =
-          '${await AndroidPathProvider.documentsPath}/countOfflineImage/image';
-      final Directory directory = Directory(folderPath);
-
-      // สร้างโฟลเดอร์ถ้ายังไม่มี
-      if (!await directory.exists()) {
-        await directory.create(recursive: true);
+      final Directory? downloadDirectory = await getExternalStorageDirectory();
+      if (downloadDirectory == null) {
+        throw Exception("Unable to get download directory");
       }
 
-      // Path ของไฟล์รูปภาพ
+      final String folderPath = '$mainFolderPath/image';
+
       final String filePath = '$folderPath/$fileName';
       final File file = File(filePath);
 
       // บันทึกไฟล์รูปภาพ
       await file.writeAsBytes(imageBytes);
 
-      return filePath; // คืนค่า path ของไฟล์ที่บันทึก
+      return filePath;
     } catch (e) {
       print('Error saving image: $e');
       return '';
     }
   }
 
-  Future<void> createFolderInPath() async {
+  Future<void> createFolderInDocument() async {
     try {
-      // Path ที่ต้องการสร้างโฟลเดอร์หลัก
-      final String mainFolderPath =
-          '${await AndroidPathProvider.documentsPath}/countOfflineImage';
+      // Get the path to the Pictures directory
+      final Directory? picturesDirectory = await getExternalStorageDirectory();
+      if (picturesDirectory == null) {
+        throw Exception("Unable to get pictures directory");
+      }
       // Path ที่ต้องการสร้างโฟลเดอร์ย่อย
       final String subFolderPath = '$mainFolderPath/image';
 

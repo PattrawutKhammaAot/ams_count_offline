@@ -62,7 +62,7 @@ class ExportModel {
       countDepartment: json[ImportDB.field_count_department],
       remark: json[ImportDB.field_remark],
       assetNotInPlan: json[ImportDB.field_asset_not_in_plan],
-      image: json[GalleryDB.field_image_file],
+      image: json[GalleryDB.field_image_file_path],
     );
   }
 
@@ -85,7 +85,7 @@ class ExportModel {
       ImportDB.field_count_department: countDepartment,
       ImportDB.field_remark: remark,
       ImportDB.field_asset_not_in_plan: assetNotInPlan,
-      GalleryDB.field_image_file: image,
+      GalleryDB.field_image_file_path: image,
     };
   }
 }

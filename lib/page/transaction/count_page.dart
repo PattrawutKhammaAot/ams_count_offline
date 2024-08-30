@@ -278,13 +278,14 @@ class _CountPageState extends State<CountPage> {
               _barcodeFocus.requestFocus();
             }, onCamera: () async {
               var result = await CustomCamera().pickFileFromCamera();
-              if (result != '') {
+
+              if (result != null) {
                 var isSuccess = await GalleryDB()
                     .insertImage(result.path, plan!, assetNoController.text);
                 if (isSuccess) {
                   CustomBotToast.showSuccess("Update Image Success");
                 } else {
-                  CustomBotToast.showError("Failed to Update");
+                  CustomBotToast.showError("Failed to Upload");
                 }
               }
             }),
@@ -330,7 +331,7 @@ class _CountPageState extends State<CountPage> {
         value: _selectedLocation,
         onChanged: (value) async {
           _selectedLocation = value.toString();
-          _departmentFocus.requestFocus();
+          _barcodeFocus.requestFocus();
           setState(() {});
         },
         onSaved: (value) {

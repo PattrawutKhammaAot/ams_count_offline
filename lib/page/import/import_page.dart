@@ -56,8 +56,8 @@ class _ImportPageState extends State<ImportPage> {
                   Expanded(
                     child: ElevatedButton(
                         style: ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(
-                                AppColors.contentColorRed)),
+                            backgroundColor:
+                                WidgetStatePropertyAll(Colors.red)),
                         onPressed: () async {
                           _showDialogConfirmDelete();
                         },
@@ -69,7 +69,7 @@ class _ImportPageState extends State<ImportPage> {
                     child: ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor: WidgetStatePropertyAll(
-                                AppColors.contentColorOrange)),
+                                AppColors.contentColorBlue)),
                         onPressed: () async {
                           await ImportDB().importFileExcel().then((event) =>
                               ImportDB().selectPlan().then(

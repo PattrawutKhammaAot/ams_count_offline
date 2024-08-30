@@ -11,14 +11,18 @@ class CustomRangePoint extends StatelessWidget {
       required this.allItem,
       this.color,
       this.text,
-      this.colorText});
+      this.colorText,
+      this.icon,
+      this.textShow,
+      this.isShowText = true});
   final int? valueRangePointer;
   final int? allItem;
-
   final Color? color;
   final String? text;
-
   final Color? colorText;
+  final Widget? icon;
+  final bool isShowText;
+  final String? textShow;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +58,9 @@ class CustomRangePoint extends StatelessWidget {
                               style: DefaultTextStyle.of(context).style,
                               children: <TextSpan>[
                                 TextSpan(
-                                  text: '${valueRangePointer?.toInt() ?? "-"}',
+                                  text: isShowText
+                                      ? '${valueRangePointer?.toInt() ?? ""}'
+                                      : textShow ?? "",
                                   style: TextStyle(
                                     fontFamily: 'Times',
                                     fontSize: 16,
@@ -75,15 +81,16 @@ class CustomRangePoint extends StatelessWidget {
                             ),
                           ),
                         ),
+                        icon ?? SizedBox.shrink(),
                         text != null || text == ""
                             ? FittedBox(
                                 fit: BoxFit.cover,
                                 child: Label(
                                   "${text}",
-                                  color: AppColors.contentColorBlue,
+                                  color: colorText ?? Colors.black,
                                 ),
                               )
-                            : SizedBox.shrink()
+                            : SizedBox.shrink(),
                       ],
                     ),
                   ),

@@ -82,6 +82,7 @@ class _ListPlanPageState extends State<ListPlanPage> {
                                         valueRangePointer: itemSum.uncheck,
                                         allItem: itemSum.allitem,
                                         text: "Uncheck",
+                                        colorText: AppColors.contentColorBlue,
                                       ),
                                     )
                                   ],
@@ -113,6 +114,7 @@ class _ListPlanPageState extends State<ListPlanPage> {
                                       child: CustomRangePoint(
                                         color: Colors.white,
                                         valueRangePointer: itemSum.checked,
+                                        colorText: AppColors.contentColorBlue,
                                         allItem: itemSum.allitem,
                                         text: "Check",
                                       ),
