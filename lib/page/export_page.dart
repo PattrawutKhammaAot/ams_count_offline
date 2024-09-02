@@ -30,6 +30,7 @@ class _ExportPageState extends State<ExportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: AppColors.contentColorBlue,
         iconTheme: IconThemeData(color: Colors.white),
