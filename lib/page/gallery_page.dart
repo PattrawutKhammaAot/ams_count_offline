@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:count_offline/component/label.dart';
 import 'package:count_offline/extension/color_extension.dart';
+import 'package:count_offline/main.dart';
 import 'package:count_offline/model/galleryModel/galleryModel.dart';
 import 'package:count_offline/services/database/gallery_db.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,7 @@ class _GalleryPageState extends State<GalleryPage> {
           color: Colors.white, // Change this to your desired color
         ),
         title: Label(
-          "Gallery",
+          appLocalization.localizations.menu_gallery,
           color: Colors.white,
           fontSize: 20,
         ),

@@ -1,14 +1,60 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:count_offline/component/custom_range_pointer.dart';
 import 'package:count_offline/extension/color_extension.dart';
+import 'package:count_offline/main.dart';
+import 'package:count_offline/model/dashboard/view_dashboard_model.dart';
+import 'package:count_offline/services/database/dashboard_db.dart';
 import 'package:flutter/material.dart';
 
-class DashBoardPage extends StatelessWidget {
-  DashBoardPage({super.key});
+class DashBoardPage extends StatefulWidget {
+  DashBoardPage({
+    super.key,
+  });
 
+  @override
+  _DashBoardPageState createState() => _DashBoardPageState();
+}
+
+class _DashBoardPageState extends State<DashBoardPage> {
   double width = 0;
   double height = 125;
+  bool isLoading = false;
+  ScrollController _scrollController = ScrollController();
+  List<ViewDashboardModel> dashboardList = [];
+  Future<List<ViewDashboardModel>>? _futureDashboardList;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    _futureDashboardList = DashboardDB().getListDropdown();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      setState(() {
+        isLoading = true;
+      });
+      // Simulate a delay for loading
+      Future.delayed(Duration(seconds: 2), () {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
+  }
+
+  void _refreshDashboard() {
+    setState(() {
+      _futureDashboardList = DashboardDB().getListDropdown();
+    });
+  }
 
   Color pastelColor(Color color) {
     return Color.fromARGB(
@@ -20,16 +66,17 @@ class DashBoardPage extends StatelessWidget {
   }
 
   dynamic header = AppColors.contentColorBlue;
-  //ไล่สีจาก header
+
+  // ไล่สีจาก header
   List<Color> getPastelColors() {
     return [
-      pastelColor(Colors.cyan),
-      pastelColor(Colors.teal),
       pastelColor(Colors.indigo),
+      pastelColor(Colors.cyan),
+      pastelColor(Colors.green),
+      pastelColor(Colors.red),
+      pastelColor(Colors.teal),
       pastelColor(Colors.blue),
       pastelColor(Colors.purple),
-      pastelColor(Colors.red),
-      pastelColor(Colors.green),
       pastelColor(Colors.yellow),
       pastelColor(Colors.orange),
       pastelColor(Colors.pink),
@@ -41,175 +88,228 @@ class DashBoardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Color> colors = getPastelColors();
-    return Expanded(
-      flex: 2,
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: 3,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              color: colors[index % colors.length],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
+    return RefreshIndicator(
+      onRefresh: () async {
+        _refreshDashboard();
+        await Future.delayed(Duration(seconds: 1));
+      },
+      child: FutureBuilder<List<ViewDashboardModel>>(
+        future: _futureDashboardList,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('No data available'),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _refreshDashboard,
+                    child: Text('Refresh'),
+                  ),
+                ],
               ),
-              elevation: 5,
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: Center(
-                        child: Text(
-                          "Plan : 202409809-00001",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+            );
+          } else {
+            return ListView.builder(
+              physics: BouncingScrollPhysics(),
+              padding: EdgeInsets.only(bottom: 60),
+              controller: _scrollController,
+              shrinkWrap: true,
+              itemCount: snapshot.data!.length + (isLoading ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index == snapshot.data!.length) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                final item = snapshot.data![index];
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    color: colors[index % colors.length],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    elevation: 5,
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Center(
+                              child: Text(
+                                "${appLocalization.localizations.ov_plan} : ${item.plan}",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  height: height,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CustomRangePoint(
+                                            text:
+                                                "${appLocalization.localizations.ov_plan}",
+                                            valueRangePointer: item.sum_asset,
+                                            colorText:
+                                                colors[index % colors.length],
+                                            color:
+                                                colors[index % colors.length],
+                                            allItem: 50,
+                                            icon: Icon(
+                                              Icons.assignment,
+                                              color:
+                                                  colors[index % colors.length],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  height: height,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CustomRangePoint(
+                                            text:
+                                                "${appLocalization.localizations.ov_images}",
+                                            valueRangePointer: item.image,
+                                            colorText:
+                                                colors[index % colors.length],
+                                            color:
+                                                colors[index % colors.length],
+                                            allItem: 50,
+                                            icon: Icon(
+                                              Icons.image,
+                                              color:
+                                                  colors[index % colors.length],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  height: height,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CustomRangePoint(
+                                            text:
+                                                "${appLocalization.localizations.ov_counted}",
+                                            valueRangePointer: item.check,
+                                            colorText:
+                                                colors[index % colors.length],
+                                            color:
+                                                colors[index % colors.length],
+                                            allItem: 50,
+                                            icon: Icon(
+                                              Icons.check,
+                                              color:
+                                                  colors[index % colors.length],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  height: height,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CustomRangePoint(
+                                            text:
+                                                "${appLocalization.localizations.ov_not_counted}",
+                                            colorText:
+                                                colors[index % colors.length],
+                                            valueRangePointer: item.uncheck,
+                                            color:
+                                                colors[index % colors.length],
+                                            allItem: 50,
+                                            icon: Icon(
+                                              Icons.cancel,
+                                              color:
+                                                  colors[index % colors.length],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            height: height,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CustomRangePoint(
-                                      text: "Plan",
-                                      valueRangePointer: 10000,
-                                      colorText: colors[index % colors.length],
-                                      color: colors[index % colors.length],
-                                      allItem: 50,
-                                      icon: Icon(
-                                        Icons.assignment,
-                                        color: colors[index % colors.length],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            height: height,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CustomRangePoint(
-                                      text: "Images",
-                                      valueRangePointer: 10,
-                                      colorText: colors[index % colors.length],
-                                      color: colors[index % colors.length],
-                                      allItem: 50,
-                                      icon: Icon(
-                                        Icons.image,
-                                        color: colors[index % colors.length],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            height: height,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CustomRangePoint(
-                                      text: "Check",
-                                      valueRangePointer: 10,
-                                      colorText: colors[index % colors.length],
-                                      color: colors[index % colors.length],
-                                      allItem: 50,
-                                      icon: Icon(
-                                        Icons.check,
-                                        color: colors[index % colors.length],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            height: height,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CustomRangePoint(
-                                      text: "Uncheck",
-                                      colorText: colors[index % colors.length],
-                                      valueRangePointer: 10,
-                                      color: colors[index % colors.length],
-                                      allItem: 50,
-                                      icon: Icon(
-                                        Icons.cancel,
-                                        color: colors[index % colors.length],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
+                  ),
+                );
+              },
+            );
+          }
         },
       ),
     );

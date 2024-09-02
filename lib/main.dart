@@ -2,51 +2,73 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:count_offline/page/loading_page.dart';
 import 'package:count_offline/routes.dart';
 import 'package:count_offline/services/database/sqlite_db.dart';
+import 'package:count_offline/services/localizationService.dart';
 import 'package:count_offline/services/theme/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:easy_localization/easy_localization.dart';
-
-import 'page/transaction/count_page.dart';
-import 'page/export_page.dart';
-import 'page/gallery_page.dart';
-import 'page/import/import_page.dart';
-import 'page/main_menu.dart';
-import 'page/report/report_page.dart';
-import 'page/setting_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 DbSqlite appDb = DbSqlite();
 
 final easyLoading = EasyLoading.init();
 final botToast = BotToastInit();
+final appLocalization = LocalizationService();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
+
   await appDb.initializeDatabase();
   final RouteObserver<PageRoute> routeObserver = CustomRouteObserver();
   configLoading();
 
-  return runApp(EasyLocalization(
-    supportedLocales: [Locale('en'), Locale('th')],
-    path: 'assets/translations',
-    fallbackLocale: const Locale('en'),
-    child: ChangeNotifierProvider<ThemeNotifier>(
-      create: (_) => ThemeNotifier(),
-      child: MaterialApp(
-        builder: (context, child) {
-          requestStoragePermission();
-          child = easyLoading(context, child);
-          child = botToast(context, child);
-          return child;
-        },
-        initialRoute: Routes.home,
-        navigatorObservers: [routeObserver, BotToastNavigatorObserver()],
-        routes: Routes.getRoutes(),
-      ),
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeNotifier>(create: (_) => ThemeNotifier()),
+        ChangeNotifierProvider<LocaleNotifier>(create: (_) => LocaleNotifier()),
+      ],
+      child: MyApp(routeObserver: routeObserver),
     ),
-  ));
+  );
+}
+
+class MyApp extends StatelessWidget {
+  final RouteObserver<PageRoute> routeObserver;
+
+  MyApp({required this.routeObserver});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<LocaleNotifier>(
+      builder: (context, localeNotifier, _) {
+        return MaterialApp(
+          builder: (context, child) {
+            appLocalization.setLocalizations(context);
+
+            requestStoragePermission();
+
+            child = easyLoading(context, child);
+            child = botToast(context, child);
+            return child;
+          },
+          initialRoute: Routes.home,
+          navigatorObservers: [routeObserver, BotToastNavigatorObserver()],
+          routes: Routes.getRoutes(),
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          locale: localeNotifier.locale,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: Provider.of<ThemeNotifier>(context).getTheme(),
+        );
+      },
+    );
+  }
 }
 
 Future<void> requestStoragePermission() async {
@@ -77,4 +99,15 @@ void configLoading() {
     ..maskColor = Colors.blue.withOpacity(0.5)
     ..userInteractions = true
     ..dismissOnTap = false;
+}
+
+class LocaleNotifier extends ChangeNotifier {
+  Locale _locale = Locale('en');
+
+  Locale get locale => _locale;
+
+  void setLocale(Locale locale) {
+    _locale = locale;
+    notifyListeners();
+  }
 }

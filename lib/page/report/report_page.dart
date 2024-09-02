@@ -46,12 +46,12 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   void _scrollListener() async {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent * 0.75 &&
         !isLoading &&
         !isRefreshing) {
       if (valueselected.isNotEmpty) {
-        await _fetchListData(valueselected);
+        await _fetchListData(valueselected, false);
       }
     }
   }
@@ -91,7 +91,7 @@ class _ReportPageState extends State<ReportPage> {
     });
   }
 
-  Future _fetchListData(String value) async {
+  Future _fetchListData(String value, bool isBack) async {
     if (isLoading || isRefreshing) return; // Prevent overlapping calls
 
     setState(() {
@@ -118,6 +118,17 @@ class _ReportPageState extends State<ReportPage> {
         offset: currentPage * pageSize,
       );
     }
+    if (isBack) {
+      currentPage = 0;
+      pageSize = 50;
+      dataList.clear();
+      newItems = await ReportDB().getAssetsByPlan(
+        value,
+        limit: pageSize,
+        offset: currentPage * pageSize,
+      );
+    }
+    Future.delayed(Duration(seconds: 2), () {});
 
     setState(() {
       dataList.addAll(newItems);
@@ -136,7 +147,7 @@ class _ReportPageState extends State<ReportPage> {
         title: Align(
           alignment: Alignment.centerLeft,
           child: Label(
-            "Report",
+            appLocalization.localizations.report_title,
             fontSize: 18,
           ),
         ),
@@ -146,7 +157,6 @@ class _ReportPageState extends State<ReportPage> {
           Stack(
             children: [
               Container(
-                color: AppColors.contentColorBlue,
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
               ),
@@ -171,7 +181,7 @@ class _ReportPageState extends State<ReportPage> {
                     .toString();
 
                 dataList.clear();
-                await _fetchListData(valueselected);
+                await _fetchListData(valueselected, false);
                 setState(() {});
               }),
               SizedBox(
@@ -207,9 +217,9 @@ class _ReportPageState extends State<ReportPage> {
                             itemCount: dataList.length + (isLoading ? 1 : 0),
                             itemBuilder: ((context, index) {
                               if (index == dataList.length) {
-                                return Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: CircularProgressIndicator());
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
                               }
                               return CardCustomReport(
                                 dataList: dataList[index],
@@ -224,7 +234,7 @@ class _ReportPageState extends State<ReportPage> {
                                   ).then((v) async {
                                     isLoading = false;
                                     setState(() {});
-                                    await _fetchListData(valueselected);
+                                    await _fetchListData(valueselected, true);
                                   });
                                 },
                               );
@@ -276,7 +286,8 @@ class _ReportPageState extends State<ReportPage> {
                                     const EdgeInsets.symmetric(horizontal: 30),
                                 child: SizedBox(
                                   child: CustomDropdownButton2(
-                                    hintText: "Please Select Plan Code",
+                                    hintText: appLocalization
+                                        .localizations.report_dropdown,
                                     items: dropdownPlans.map((item) {
                                       return DropdownMenuItem<dynamic>(
                                         value: item.plan,
@@ -304,7 +315,7 @@ class _ReportPageState extends State<ReportPage> {
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: Label(
-                            "UnCheck : ",
+                            "${appLocalization.localizations.report_txt_uncheck} : ",
                             color: AppColors.contentColorBlue,
                           ),
                         ),
@@ -331,7 +342,9 @@ class _ReportPageState extends State<ReportPage> {
                                 color: AppColors.contentColorBlue,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8))),
-                            child: Center(child: Label("View")),
+                            child: Center(
+                                child: Label(appLocalization
+                                    .localizations.report_btn_view_uncheck)),
                           ),
                         ),
                       )
@@ -345,7 +358,7 @@ class _ReportPageState extends State<ReportPage> {
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: Label(
-                            "Check : ",
+                            "${appLocalization.localizations.report_txt_check} : ",
                             color: AppColors.contentColorBlue,
                           ),
                         ),
@@ -372,7 +385,9 @@ class _ReportPageState extends State<ReportPage> {
                                 color: AppColors.contentColorBlue,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8))),
-                            child: Center(child: Label("View")),
+                            child: Center(
+                                child: Label(appLocalization
+                                    .localizations.report_btn_view_uncheck)),
                           ),
                         ),
                       )

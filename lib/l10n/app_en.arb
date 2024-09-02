@@ -1,0 +1,40 @@
+{
+   "menu_import": "Import File",
+   "menu_export": "Export File",
+   "menu_count": "Count",
+   "menu_gallery": "Gallery",
+   "menu_setting": "Settings",
+   "menu_report": "Report",
+   "overview": "Overview",
+   "ov_plan": "Plan",
+   "ov_images": "Images",
+   "ov_counted": "Checked",
+   "ov_not_counted": "Uncheck",
+
+   "import_title": "Import File",
+   "import_btn_clearAll": "Clear All Data",
+   "import_btn_import": "Import File",
+   "import_alert_title": "Alert!",
+   "import_alert_content": "Are you sure you want to clear all data?",
+   "import_btn_delete": "Delete",
+   "import_btn_cancel": "Cancel",
+
+   "report_title": "Report",
+   "report_dropdown": "Select Plan",
+   "report_txt_uncheck": "Uncheck",
+   "report_txt_check": "Checked",
+   "report_btn_view_uncheck": "View",
+   "report_btn_view_check": "View",
+
+   "export_title": "Export File",
+   "export_downdown": "Please select a file to export",
+   "export_btn_export": "Export File to Excel",
+
+   "setting_title": "Settings",
+   "setting_btn_clear_data": "Clear Data",
+   "setting_alert_clear_data_title": "Alert!",
+   "setting_alert_clear_data_content": "Are you sure you want to clear all data?",
+   "setting_btn_clear_image": "Clear Images",
+   "setting_alert_clear_image_title": "Alert!",
+   "setting_alert_clear_image_content": "Are you sure you want to clear all images?"
+}

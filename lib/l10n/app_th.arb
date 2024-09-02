@@ -1,0 +1,51 @@
+{
+   "menu_import" :"นำเข้าไฟล์",
+   "menu_export" :"ส่งออกไฟล์",
+   "menu_count":"ตรวจนับ",
+   "menu_gallery":"รูปภาพ",
+   "menu_setting":"ตั้งค่า",
+   "menu_report":"รายงาน",
+   "overview":"ภาพรวม",
+   "ov_plan":"แผน",
+   "ov_images":"รูปภาพ",
+   "ov_counted":"นับแล้ว",
+   "ov_not_counted":"ยังไม่ได้นับ",
+
+
+   "import_title":"นำเข้าไฟล์",
+   "import_btn_clearAll":"ลบข้อมูลทั้งหมด",
+   "import_btn_import":"นำเข้าไฟล์",
+   "import_alert_title":"แจ้งเตือน !",
+   "import_alert_content":"คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลทั้งหมด ?",
+   "import_btn_delete":"ลบ",
+   "import_btn_cancel":"ยกเลิก",
+
+   "report_title":"รายงาน",
+   "report_dropdown":"เลือกแผน",
+   "report_txt_uncheck":"ยังไม่ได้นับ",
+   "report_txt_check":"นับแล้ว",
+   "report_btn_view_uncheck":"ดู",
+   "report_btn_view_check":"ดู",
+
+   "export_title":"ส่งออกไฟล์",
+   "export_downdown":"กรุณาเลือกไฟล์เพื่อส่งออก",
+   "export_btn_export":"ส่งออกไฟล์ไปยังExcel",
+   
+
+   "setting_title":"ตั้งค่า",
+   "setting_btn_clear_data":"ลบข้อมูล",
+   "setting_alert_clear_data_title":"แจ้งเตือน !",
+   "setting_alert_clear_data_content":"คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลทั้งหมด ?",
+   "setting_btn_clear_image":"ลบรูปภาพ",
+   "setting_alert_clear_image_title":"แจ้งเตือน !",
+   "setting_alert_clear_image_content":"คุณแน่ใจหรือไม่ว่าต้องการลบรูปภาพทั้งหมด ?",
+   "import_btn_delete":"ลบ",
+   "import_btn_cancel":"ยกเลิก"
+
+   
+   
+
+
+
+
+}

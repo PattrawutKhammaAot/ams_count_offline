@@ -73,13 +73,6 @@ class ExportDB {
         );
 
         // Query associated images
-        final images = await db.query(
-          GalleryDB.field_tableName,
-          where: '${GalleryDB.field_plan} = ?',
-          whereArgs: [plan],
-          limit: batchSize,
-          offset: offset,
-        );
 
         if (assets.isEmpty) {
           hasMoreData = false;
@@ -87,6 +80,14 @@ class ExportDB {
         }
 
         for (int i = 0; i < assets.length; i++) {
+          final images = await db.query(
+            GalleryDB.field_tableName,
+            where:
+                '${GalleryDB.field_plan} = ? AND ${GalleryDB.field_asset} = ?',
+            whereArgs: [plan, assets[i][ImportDB.field_asset]],
+            limit: batchSize,
+            offset: offset,
+          );
           Uint8List? imageBytes;
 
           // Fetch image bytes for the corresponding asset

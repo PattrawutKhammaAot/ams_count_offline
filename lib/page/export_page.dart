@@ -1,6 +1,7 @@
 import 'package:count_offline/component/custom_dropdown2.dart';
 import 'package:count_offline/component/custombutton.dart';
 import 'package:count_offline/extension/color_extension.dart';
+import 'package:count_offline/main.dart';
 import 'package:count_offline/services/database/export_db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -32,7 +33,8 @@ class _ExportPageState extends State<ExportPage> {
       appBar: AppBar(
         backgroundColor: AppColors.contentColorBlue,
         iconTheme: IconThemeData(color: Colors.white),
-        title: Text('Export Page', style: TextStyle(color: Colors.white)),
+        title: Text(appLocalization.localizations.export_title,
+            style: TextStyle(color: Colors.white)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -43,7 +45,7 @@ class _ExportPageState extends State<ExportPage> {
               child: Column(
                 children: [
                   CustomDropdownButton2(
-                    hintText: "Please Select Plan To Export",
+                    hintText: appLocalization.localizations.export_downdown,
                     items: items
                         .map((String item) => DropdownMenuItem<String>(
                               value: item,
@@ -69,7 +71,7 @@ class _ExportPageState extends State<ExportPage> {
             selectedValue != null
                 ? CustomButton(
                     isUseIcon: false,
-                    text: "Export to Excel",
+                    text: appLocalization.localizations.export_btn_export,
                     color: AppColors.contentColorBlue,
                     onPressed: () async {
                       EasyLoading.show(status: 'loading data ...');

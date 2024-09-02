@@ -41,8 +41,8 @@ class _ViewImportPageState extends State<ViewImportPage> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent * 0.75 &&
         !isLoading) {
       _fetchData();
     }

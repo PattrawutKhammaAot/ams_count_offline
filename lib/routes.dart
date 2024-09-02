@@ -1,3 +1,4 @@
+import 'package:count_offline/page/main_menu.dart';
 import 'package:count_offline/page/transaction/count_page.dart';
 import 'package:count_offline/page/gallery_page.dart';
 import 'package:count_offline/page/import/import_page.dart';
@@ -22,6 +23,7 @@ class Routes {
   static const String view_detail_import = '/viewImportDetail';
   static const String select_plan = '/selectplan';
   static const String editPage = '/editPage';
+  static const String menuPage = '/menuPage';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -35,6 +37,7 @@ class Routes {
       view_detail_import: (context) => ViewImportPage(),
       select_plan: (context) => ListPlanPage(),
       editPage: (context) => EditDataCountPage(),
+      menuPage: (context) => MenuPage(),
     };
   }
 }

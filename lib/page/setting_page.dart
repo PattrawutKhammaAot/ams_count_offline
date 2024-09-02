@@ -1,3 +1,4 @@
+import 'package:count_offline/main.dart';
 import 'package:count_offline/services/database/setting_db.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class SettingPage extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.blue,
         title: Text(
-          'Setting Page',
+          appLocalization.localizations.setting_title,
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -20,18 +21,21 @@ class SettingPage extends StatelessWidget {
           children: [
             ListTile(
               leading: Icon(Icons.delete, color: Colors.red),
-              title: Text('Clear data'),
+              title: Text(appLocalization.localizations.setting_btn_clear_data),
               onTap: () {
                 // Add your clear transaction logic here
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text('Clear data'),
-                    content: Text('Are you sure you want to clear all data?'),
+                    title: Text(appLocalization
+                        .localizations.setting_alert_clear_data_title),
+                    content: Text(appLocalization
+                        .localizations.setting_alert_clear_data_content),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: Text('Cancel'),
+                        child: Text(
+                            appLocalization.localizations.import_btn_cancel),
                       ),
                       TextButton(
                         onPressed: () async {
@@ -39,7 +43,8 @@ class SettingPage extends StatelessWidget {
                           // Perform clear transaction action
                           Navigator.of(context).pop();
                         },
-                        child: Text('Clear'),
+                        child: Text(
+                            appLocalization.localizations.import_btn_delete),
                       ),
                     ],
                   ),
@@ -49,18 +54,22 @@ class SettingPage extends StatelessWidget {
             Divider(),
             ListTile(
               leading: Icon(Icons.image, color: Colors.blue),
-              title: Text('Clear Image'),
+              title:
+                  Text(appLocalization.localizations.setting_btn_clear_image),
               onTap: () {
                 // Add your clear image logic here
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text('Clear Image'),
-                    content: Text('Are you sure you want to clear all images?'),
+                    title: Text(appLocalization
+                        .localizations.setting_alert_clear_image_title),
+                    content: Text(appLocalization
+                        .localizations.setting_alert_clear_image_content),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: Text('Cancel'),
+                        child: Text(
+                            appLocalization.localizations.import_btn_cancel),
                       ),
                       TextButton(
                         onPressed: () async {
@@ -68,7 +77,8 @@ class SettingPage extends StatelessWidget {
                           // Perform clear image action
                           Navigator.of(context).pop();
                         },
-                        child: Text('Clear'),
+                        child: Text(
+                            appLocalization.localizations.import_btn_delete),
                       ),
                     ],
                   ),

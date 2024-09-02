@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../../main.dart';
 import '../../model/importModel/view_Import_Model.dart';
 
 class ImportPage extends StatefulWidget {
@@ -61,7 +62,8 @@ class _ImportPageState extends State<ImportPage> {
                         onPressed: () async {
                           _showDialogConfirmDelete();
                         },
-                        child: Text("Clear All",
+                        child: Text(
+                            appLocalization.localizations.import_btn_clearAll,
                             style: TextStyle(color: Colors.white))),
                   ),
                   SizedBox(width: 20),
@@ -75,7 +77,8 @@ class _ImportPageState extends State<ImportPage> {
                               ImportDB().selectPlan().then(
                                   (value) => setState(() => itemPlan = value)));
                         },
-                        child: Text("Import",
+                        child: Text(
+                            appLocalization.localizations.import_btn_import,
                             style: TextStyle(color: Colors.white))),
                   ),
                 ],
@@ -182,14 +185,14 @@ class _ImportPageState extends State<ImportPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Delete Confirmation"),
-          content: Text("Are you sure you want to delete all item ?"),
+          title: Text(appLocalization.localizations.import_alert_title),
+          content: Text(appLocalization.localizations.import_alert_content),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Cancel"),
+              child: Text(appLocalization.localizations.import_btn_cancel),
             ),
             TextButton(
               onPressed: () async {
@@ -207,7 +210,7 @@ class _ImportPageState extends State<ImportPage> {
                 setState(() {});
                 Navigator.of(context).pop();
               },
-              child: Text("Delete"),
+              child: Text(appLocalization.localizations.import_btn_delete),
             ),
           ],
         );
