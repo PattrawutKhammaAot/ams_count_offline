@@ -10,6 +10,7 @@ import '../../component/custom_botToast.dart';
 import '../../component/custom_camera.dart';
 import '../../component/textformfield/custom_input.dart';
 import '../../extension/color_extension.dart';
+import '../../main.dart';
 import '../../model/count/countModelEvent.dart';
 import '../../services/database/count_db.dart';
 import '../../services/database/gallery_db.dart';
@@ -243,7 +244,8 @@ class _EditDataCountPageState extends State<EditDataCountPage> {
                 ),
               );
               if (result) {
-                CustomBotToast.showSuccess("Update Success");
+                CustomBotToast.showSuccess(
+                    appLocalization.localizations.update_success);
               }
               _barcodeFocus.requestFocus();
             }, onCamera: () async {
@@ -253,7 +255,8 @@ class _EditDataCountPageState extends State<EditDataCountPage> {
                 var isSuccess = await GalleryDB()
                     .insertImage(result.path, plan!, assetNoController.text);
                 if (isSuccess) {
-                  CustomBotToast.showSuccess("Update Image Success");
+                  CustomBotToast.showSuccess(
+                      appLocalization.localizations.update_image_success);
                 } else {
                   CustomBotToast.showError("Failed to Upload");
                 }
@@ -460,7 +463,7 @@ class _EditDataCountPageState extends State<EditDataCountPage> {
           Expanded(
             child: CustomButton(
               icon: Icons.save,
-              text: "Save",
+              text: appLocalization.localizations.btn_save,
               onPressed: onSave,
               color: AppColors.contentColorBlue,
             ),
@@ -471,7 +474,7 @@ class _EditDataCountPageState extends State<EditDataCountPage> {
           Expanded(
             child: CustomButton(
               icon: Icons.camera_enhance,
-              text: "Camera",
+              text: appLocalization.localizations.btn_camera,
               onPressed: onCamera,
               color: AppColors.contentColorOrange,
             ),

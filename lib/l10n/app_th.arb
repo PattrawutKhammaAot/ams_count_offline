@@ -39,6 +39,14 @@
    "setting_btn_clear_image":"ลบรูปภาพ",
    "setting_alert_clear_image_title":"แจ้งเตือน !",
    "setting_alert_clear_image_content":"คุณแน่ใจหรือไม่ว่าต้องการลบรูปภาพทั้งหมด ?",
+
+
+   "listplan_title":"รายการแผน",
+   "listplan_uncheked":"ยังไม่ได้นับ",
+   "listplan_checked":"นับแล้ว",
+   "listplan_total":"รวม",
+   "listplan_plan":"แผน",
+   "listplan_created":"สร้างเมื่อ",
    
    
    "loading":"กำลังโหลด...",
@@ -63,7 +71,9 @@
    "warning_count_location_not_match":"สถานที่ตรวจนับไม่ตรงกับข้อมูลในแผน",
    "warning_count_location_and_department_not_match":"แผนกและสถานที่ตรวจนับไม่ตรงกับข้อมูลในแผน",
    "warning_count_asset_not_in_plan":"สินทรัพย์นี้ไม่ได้อยู่ในแผน คุณต้องการตรวจนับหรือไม่",
-   "btn_ok":"ตกลง"
+   "btn_ok":"ตกลง",
+   "btn_save":"บันทึก",
+   "btn_camera":"ถ่ายรูป"
 
    
    

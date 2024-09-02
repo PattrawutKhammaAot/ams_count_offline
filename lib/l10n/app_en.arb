@@ -30,6 +30,13 @@
    "export_downdown": "Please select a file to export",
    "export_btn_export": "Export File to Excel",
 
+   "listplan_title": "Plan List",
+"listplan_uncheked": "Uncheck",
+"listplan_checked": "Checked",
+"listplan_total": "Total",
+"listplan_plan": "Plan",
+"listplan_created": "Created",
+
    "setting_title": "Settings",
    "setting_btn_clear_data": "Clear Data",
    "setting_alert_clear_data_title": "Alert!",
@@ -59,5 +66,7 @@
 "warning_count_location_not_match": "The counted location does not match the plan data",
 "warning_count_location_and_department_not_match": "The counted department and location do not match the plan data",
 "warning_count_asset_not_in_plan":"This asset is not in the plan. Do you want to count it?",
-"btn_ok":"OK"
+"btn_ok":"OK",
+"btn_save":"Save",
+   "btn_camera":"Camera"
 }

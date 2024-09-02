@@ -27,17 +27,25 @@ class CountDB {
       ImportDB.field_created_date,
       ImportDB.field_status_plan
     ]);
+
+    final Set<String> uniquePlans = {};
     final List<ViewListCountModel> planReturn = [];
+
     for (var json in result) {
       String planStr = json[ImportDB.field_plan].toString();
       String createdDate = json[ImportDB.field_created_date].toString();
       String statusPlan = json[ImportDB.field_status_plan].toString();
-      planReturn.add(ViewListCountModel(
-        plan: planStr,
-        createdDate: createdDate,
-        statusPlan: statusPlan,
-      ));
+
+      if (!uniquePlans.contains(planStr)) {
+        uniquePlans.add(planStr);
+        planReturn.add(ViewListCountModel(
+          plan: planStr,
+          createdDate: createdDate,
+          statusPlan: statusPlan,
+        ));
+      }
     }
+
     return planReturn;
   }
 

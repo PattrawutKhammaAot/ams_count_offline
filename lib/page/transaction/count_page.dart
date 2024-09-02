@@ -505,7 +505,7 @@ class _CountPageState extends State<CountPage> {
           Expanded(
             child: CustomButton(
               icon: Icons.save,
-              text: "Save",
+              text: appLocalization.localizations.btn_save,
               onPressed: onSave,
               color: AppColors.contentColorBlue,
             ),
@@ -516,7 +516,7 @@ class _CountPageState extends State<CountPage> {
           Expanded(
             child: CustomButton(
               icon: Icons.camera_enhance,
-              text: "Camera",
+              text: appLocalization.localizations.btn_camera,
               onPressed: onCamera,
               color: AppColors.contentColorOrange,
             ),

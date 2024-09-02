@@ -1,6 +1,7 @@
 import 'package:count_offline/component/custom_range_pointer.dart';
 import 'package:count_offline/component/textformfield/custom_input.dart';
 import 'package:count_offline/extension/color_extension.dart';
+import 'package:count_offline/main.dart';
 import 'package:count_offline/model/count/ViewSumStatusModel.dart';
 import 'package:count_offline/model/count/viewListCount.dart';
 import 'package:count_offline/routes.dart';
@@ -48,8 +49,8 @@ class _ListPlanPageState extends State<ListPlanPage> {
           iconTheme: IconThemeData(
             color: Colors.white, // Change this to your desired color
           ),
-          title: const Text(
-            "List Count",
+          title: Text(
+            appLocalization.localizations.listplan_title,
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
           ),
@@ -81,7 +82,8 @@ class _ListPlanPageState extends State<ListPlanPage> {
                                         color: Colors.red,
                                         valueRangePointer: itemSum.uncheck,
                                         allItem: itemSum.allitem,
-                                        text: "Uncheck",
+                                        text: appLocalization
+                                            .localizations.listplan_uncheked,
                                         colorText: AppColors.contentColorBlue,
                                       ),
                                     )
@@ -94,7 +96,7 @@ class _ListPlanPageState extends State<ListPlanPage> {
                           child: Column(
                             children: [
                               Label(
-                                "Total",
+                                appLocalization.localizations.listplan_total,
                                 color: AppColors.contentColorBlue,
                                 fontSize: 20,
                               ),
@@ -116,7 +118,8 @@ class _ListPlanPageState extends State<ListPlanPage> {
                                         valueRangePointer: itemSum.checked,
                                         colorText: AppColors.contentColorBlue,
                                         allItem: itemSum.allitem,
-                                        text: "Check",
+                                        text: appLocalization
+                                            .localizations.listplan_checked,
                                       ),
                                     ),
                                     const SizedBox(
@@ -194,7 +197,7 @@ class _ListPlanPageState extends State<ListPlanPage> {
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                      "Plan : ${itemPlan[index].plan}"),
+                                                      "${appLocalization.localizations.listplan_plan} : ${itemPlan[index].plan}"),
                                                 ),
                                                 Row(
                                                     mainAxisAlignment:
@@ -206,7 +209,7 @@ class _ListPlanPageState extends State<ListPlanPage> {
                                                             const EdgeInsets
                                                                 .all(8.0),
                                                         child: Text(
-                                                            "Created : ${itemPlan[index].createdDate}"),
+                                                            "${appLocalization.localizations.listplan_created} : ${itemPlan[index].createdDate}"),
                                                       ),
                                                       Align(
                                                         alignment:
