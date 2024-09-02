@@ -28,7 +28,8 @@ class ExportDB {
   Future<void> ExportAllAssetByPlan(String plan) async {
     try {
       EasyLoading.show(
-          status: 'Loading...', maskType: EasyLoadingMaskType.black);
+          status: appLocalization.localizations.loading,
+          maskType: EasyLoadingMaskType.black);
       final db = await appDb.database;
       const int batchSize = 500;
       int offset = 0;
@@ -194,7 +195,8 @@ class ExportDB {
         final progress = (offset / (offset + batchSize)) * 100;
         EasyLoading.showProgress(
           offset / (offset + batchSize),
-          status: 'Export ... ${progress.toStringAsFixed(0)}%',
+          status:
+              '${appLocalization.localizations.export_loading}. ${progress.toStringAsFixed(0)}%',
           maskType: EasyLoadingMaskType.black,
         );
 
@@ -227,7 +229,7 @@ class ExportDB {
 
       // Dismiss loading
       EasyLoading.showSuccess(
-          'Exported to $text_name $baseFileName($fileIndex)$fileExtension',
+          '${appLocalization.localizations.export_to} $text_name $baseFileName($fileIndex)$fileExtension',
           maskType: EasyLoadingMaskType.black);
     } catch (e, s) {
       print(e);

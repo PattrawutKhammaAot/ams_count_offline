@@ -65,7 +65,7 @@ class GalleryDB {
           where: "$field_asset = ? AND $field_plan = ?",
           whereArgs: [assetValue, planValue],
           limit: 1);
-      print("checkInDB: $newImagePath");
+
       if (checkInDB.isEmpty) {
         var result = await db.insert(
           field_tableName, // Table name
@@ -81,7 +81,8 @@ class GalleryDB {
         );
 
         if (result != 0) {
-          CustomBotToast.showSuccess("Upload Image Success !");
+          CustomBotToast.showSuccess(
+              appLocalization.localizations.upload_image_success);
           return true;
         }
       } else {
@@ -101,7 +102,8 @@ class GalleryDB {
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
         if (result != 0) {
-          CustomBotToast.showSuccess("Update Image Success !");
+          CustomBotToast.showSuccess(
+              appLocalization.localizations.update_image_success);
           return true;
         }
       }

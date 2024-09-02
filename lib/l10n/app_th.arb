@@ -9,7 +9,7 @@
    "ov_plan":"แผน",
    "ov_images":"รูปภาพ",
    "ov_counted":"นับแล้ว",
-   "ov_not_counted":"ยังไม่ได้นับ",
+   "ov_not_counted":"ไม่ได้นับ",
 
 
    "import_title":"นำเข้าไฟล์",
@@ -39,8 +39,31 @@
    "setting_btn_clear_image":"ลบรูปภาพ",
    "setting_alert_clear_image_title":"แจ้งเตือน !",
    "setting_alert_clear_image_content":"คุณแน่ใจหรือไม่ว่าต้องการลบรูปภาพทั้งหมด ?",
-   "import_btn_delete":"ลบ",
-   "import_btn_cancel":"ยกเลิก"
+   
+   
+   "loading":"กำลังโหลด...",
+   "no_data":"ไม่มีข้อมูล",
+   "no_image":"ไม่มีรูปภาพ",
+   "no_plan":"ไม่มีแผน",
+   "no_data_found":"ไม่พบข้อมูล",
+   "import_loading":"กำลังนำเข้า...",
+   "success":"สำเร็จ",
+   "update_success":"อัพเดทสำเร็จ",
+   "update_image_success":"อัพเดทรูปภาพสำเร็จ",
+   "upload_image_success":"อัพโหลดรูปภาพสำเร็จ",
+   "export_success":"ส่งออกสำเร็จ",
+   "export_loading":"กำลังส่งออก...",
+   "export_to":"ส่งออกไปยัง",
+   "delete_all_Data":"ข้อมูลทั้งหมดถูกลบเรียบร้อยแล้ว",
+   "failed_to_delete":"ลบไม่สำเร็จ",
+   "delete_all_images":"รูปภาพทั้งหมดถูกลบเรียบร้อยแล้ว",
+   "warning_count_asset":"คำเตือน !",
+   "warning_count_asset_already_count":"สินทรัพย์นี้ถูกนับแล้ว ต้องการนับอีกครั้งหรือไม่",
+   "warning_count_department_not_match":"แผนกที่ตรวจนับไม่ตรงกับข้อมูลในแผน",
+   "warning_count_location_not_match":"สถานที่ตรวจนับไม่ตรงกับข้อมูลในแผน",
+   "warning_count_location_and_department_not_match":"แผนกและสถานที่ตรวจนับไม่ตรงกับข้อมูลในแผน",
+   "warning_count_asset_not_in_plan":"สินทรัพย์นี้ไม่ได้อยู่ในแผน คุณต้องการตรวจนับหรือไม่",
+   "btn_ok":"ตกลง"
 
    
    

@@ -57,9 +57,9 @@ class CountDB {
         //ถ้านับไปแล้ว
         if (isChecked) {
           bool isConfirm = await showDialogConfirm(context,
-              title: "Warning",
-              content:
-                  "This asset has already been counted. Do you want to count it again?",
+              title: appLocalization.localizations.warning_count_asset,
+              content: appLocalization
+                  .localizations.warning_count_asset_already_count,
               type: TypeAlert.warning);
           if (isConfirm) {
             //เช็คว่ามีLocation หรือ Department มีส่งมาไหม
@@ -68,28 +68,29 @@ class CountDB {
               isCheckLocation = await checkLocation(obj);
               isCheckDepartment = await checkDepartment(obj);
               if (isCheckLocation && isCheckDepartment) {
-                CustomBotToast.showSuccess("Success ");
+                CustomBotToast.showSuccess(
+                    appLocalization.localizations.success);
               } else if (isCheckLocation && !isCheckDepartment) {
-                CustomBotToast.showWarning(
-                    "Department that does not match the data in the plan");
+                CustomBotToast.showWarning(appLocalization
+                    .localizations.warning_count_department_not_match);
               } else if (!isCheckLocation && isCheckDepartment) {
-                CustomBotToast.showWarning(
-                    "Location that does not match the data in the plan");
+                CustomBotToast.showWarning(appLocalization
+                    .localizations.warning_count_location_not_match);
               } else {
-                CustomBotToast.showWarning(
-                    "Location and Department that do not match the data in the plan");
+                CustomBotToast.showWarning(appLocalization.localizations
+                    .warning_count_location_and_department_not_match);
               }
             } else if (obj.location != null && obj.department == null) {
               isCheckLocation = await checkLocation(obj);
               if (!isCheckLocation) {
-                CustomBotToast.showWarning(
-                    "Location that does not match the data in the plan");
+                CustomBotToast.showWarning(appLocalization
+                    .localizations.warning_count_location_not_match);
               }
             } else if (obj.location == null && obj.department != null) {
               isCheckDepartment = await checkDepartment(obj);
               if (!isCheckDepartment) {
-                CustomBotToast.showWarning(
-                    "Department that does not match the data in the plan");
+                CustomBotToast.showWarning(appLocalization
+                    .localizations.warning_count_department_not_match);
               }
             }
             itemReturn = await updateInPlan(obj);
@@ -101,28 +102,28 @@ class CountDB {
             isCheckLocation = await checkLocation(obj);
             isCheckDepartment = await checkDepartment(obj);
             if (isCheckLocation && isCheckDepartment) {
-              CustomBotToast.showSuccess("Success ");
+              CustomBotToast.showSuccess(appLocalization.localizations.success);
             } else if (isCheckLocation && !isCheckDepartment) {
-              CustomBotToast.showWarning(
-                  "Department that does not match the data in the plan");
+              CustomBotToast.showWarning(appLocalization
+                  .localizations.warning_count_department_not_match);
             } else if (!isCheckLocation && isCheckDepartment) {
-              CustomBotToast.showWarning(
-                  "Location that does not match the data in the plan");
+              CustomBotToast.showWarning(appLocalization
+                  .localizations.warning_count_location_not_match);
             } else {
-              CustomBotToast.showWarning(
-                  "Location and Department that do not match the data in the plan");
+              CustomBotToast.showWarning(appLocalization
+                  .localizations.warning_count_department_not_match);
             }
           } else if (obj.location != null && obj.department == null) {
             isCheckLocation = await checkLocation(obj);
             if (!isCheckLocation) {
-              CustomBotToast.showWarning(
-                  "Location that does not match the data in the plan");
+              CustomBotToast.showWarning(appLocalization
+                  .localizations.warning_count_location_not_match);
             }
           } else if (obj.location == null && obj.department != null) {
             isCheckDepartment = await checkDepartment(obj);
             if (!isCheckDepartment) {
-              CustomBotToast.showWarning(
-                  "Department that does not match the data in the plan");
+              CustomBotToast.showWarning(appLocalization
+                  .localizations.warning_count_department_not_match);
             }
           }
           itemReturn = await updateInPlan(obj);
@@ -131,8 +132,9 @@ class CountDB {
       //ไม่ได้อยู่ในแผน
       else if (isCheckPlan == StatusQuery.notPlan) {
         bool isConfirmNotPlan = await showDialogConfirm(context,
-            title: "Warning",
-            content: "This asset is not in the plan. Do you want to count it?",
+            title: appLocalization.localizations.warning_count_asset,
+            content:
+                appLocalization.localizations.warning_count_asset_not_in_plan,
             type: TypeAlert.warning);
         if (isConfirmNotPlan) {
           if (obj.location != null && obj.department != null) {
@@ -140,36 +142,36 @@ class CountDB {
             isCheckLocation = await checkLocation(obj);
             isCheckDepartment = await checkDepartment(obj);
             if (isCheckLocation && isCheckDepartment) {
-              CustomBotToast.showSuccess("Success ");
+              CustomBotToast.showSuccess(appLocalization.localizations.success);
             } else if (isCheckLocation && !isCheckDepartment) {
-              CustomBotToast.showWarning(
-                  "Department that does not match the data in the plan");
+              CustomBotToast.showWarning(appLocalization
+                  .localizations.warning_count_department_not_match);
             } else if (!isCheckLocation && isCheckDepartment) {
-              CustomBotToast.showWarning(
-                  "Location that does not match the data in the plan");
+              CustomBotToast.showWarning(appLocalization
+                  .localizations.warning_count_location_not_match);
             } else {
-              CustomBotToast.showWarning(
-                  "Location and Department that do not match the data in the plan");
+              CustomBotToast.showWarning(appLocalization.localizations
+                  .warning_count_location_and_department_not_match);
             }
           } else if (obj.location != null && obj.department == null) {
             isCheckLocation = await checkLocation(obj);
             if (!isCheckLocation) {
-              CustomBotToast.showWarning(
-                  "Location that does not match the data in the plan");
+              CustomBotToast.showWarning(appLocalization
+                  .localizations.warning_count_location_not_match);
             }
             //ถ้ามี Location แต่ไม่มี Department
           } else if (obj.location == null && obj.department != null) {
             //ถ้ามี Department แต่ไม่มี Location
             isCheckDepartment = await checkDepartment(obj);
             if (!isCheckDepartment) {
-              CustomBotToast.showWarning(
-                  "Departmen that does not match the data in the plan");
+              CustomBotToast.showWarning(appLocalization
+                  .localizations.warning_count_department_not_match);
             }
           }
           itemReturn = await _insertNotINPlan(obj);
         }
       } else if (isCheckPlan == StatusQuery.invalid) {
-        CustomBotToast.showWarning("Data not Found");
+        CustomBotToast.showWarning(appLocalization.localizations.no_data_found);
       }
       return itemReturn;
     } catch (e, s) {
@@ -357,7 +359,6 @@ class CountDB {
 
   Future<ResponseCountModel> _insertNotINPlan(CountModelEvent obj) async {
     try {
-      print("notPlan");
       ResponseCountModel itemReturn = ResponseCountModel(is_Success: false);
       final db = await appDb.database;
       final queryAssetOutPlan = await db.query(tableName,
@@ -413,10 +414,10 @@ class CountDB {
         }
 
         await updateStatusPlan(obj);
-        print("update");
+
         return itemReturn;
       }
-      print("Noupdate");
+
       return itemReturn;
     } catch (e, s) {
       print(e);
@@ -451,17 +452,17 @@ class CountDB {
                   onPressed: () {
                     Navigator.of(context).pop(false);
                   },
-                  child: Text('Cancel', style: TextStyle(color: Colors.white)),
+                  child: Text(appLocalization.localizations.import_btn_cancel,
+                      style: TextStyle(color: Colors.white)),
                 ),
                 TextButton(
                   style: ButtonStyle(
-                      backgroundColor:
-                          WidgetStatePropertyAll(Colors.greenAccent)),
+                      backgroundColor: WidgetStatePropertyAll(Colors.green)),
                   onPressed: () {
                     Navigator.of(context).pop(true);
                   },
                   child: Text(
-                    'OK',
+                    appLocalization.localizations.btn_ok,
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

@@ -8,7 +8,7 @@ import '../../model/dashboard/view_dashboard_model.dart';
 
 class DashboardDB {
   String master = ImportDB.field_tableName;
-  String gallery = ImportDB.field_tableName;
+  String gallery = GalleryDB.field_tableName;
   Future<List<ViewDashboardModel>> getListDropdown() async {
     final db = await appDb.database;
     final resultPlan =

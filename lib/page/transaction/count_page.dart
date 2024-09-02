@@ -4,6 +4,7 @@ import 'package:count_offline/component/custom_camera.dart';
 import 'package:count_offline/component/custombutton.dart';
 import 'package:count_offline/component/textformfield/custom_input.dart';
 import 'package:count_offline/extension/color_extension.dart';
+import 'package:count_offline/main.dart';
 import 'package:count_offline/model/count/countModelEvent.dart';
 import 'package:count_offline/model/count/responseCountModel.dart';
 import 'package:count_offline/model/department/departmentModel.dart';
@@ -273,7 +274,8 @@ class _CountPageState extends State<CountPage> {
                 ),
               );
               if (result) {
-                CustomBotToast.showSuccess("Update Success");
+                CustomBotToast.showSuccess(
+                    appLocalization.localizations.update_success);
               }
               _barcodeFocus.requestFocus();
             }, onCamera: () async {
@@ -283,7 +285,8 @@ class _CountPageState extends State<CountPage> {
                 var isSuccess = await GalleryDB()
                     .insertImage(result.path, plan!, assetNoController.text);
                 if (isSuccess) {
-                  CustomBotToast.showSuccess("Update Image Success");
+                  CustomBotToast.showSuccess(
+                      appLocalization.localizations.upload_image_success);
                 } else {
                   CustomBotToast.showError("Failed to Upload");
                 }

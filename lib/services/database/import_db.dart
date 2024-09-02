@@ -84,7 +84,8 @@ class ImportDB {
   Future<void> importFileExcel() async {
     try {
       EasyLoading.show(
-          status: 'Loading...', maskType: EasyLoadingMaskType.black);
+          status: appLocalization.localizations.loading,
+          maskType: EasyLoadingMaskType.black);
       final FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['xlsx', 'xls'],
@@ -92,7 +93,8 @@ class ImportDB {
 
       if (result != null) {
         EasyLoading.show(
-            status: 'Importing...', maskType: EasyLoadingMaskType.black);
+            status: appLocalization.localizations.import_loading,
+            maskType: EasyLoadingMaskType.black);
         final String excelPath = result.files.single.path!;
 
         final bytes = File(excelPath).readAsBytesSync();
@@ -133,7 +135,8 @@ class ImportDB {
 
           final progress = ((i + chunkSize) / dataWithoutHeader.length) * 100;
           EasyLoading.showProgress(progress / 100,
-              status: 'Importing... ${progress.toStringAsFixed(0)}%',
+              status:
+                  '${appLocalization.localizations.import_loading} ${progress.toStringAsFixed(0)}%',
               maskType: EasyLoadingMaskType.black);
         }
 

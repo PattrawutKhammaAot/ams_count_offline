@@ -70,18 +70,18 @@ class _DashBoardPageState extends State<DashBoardPage> {
   // ไล่สีจาก header
   List<Color> getPastelColors() {
     return [
-      pastelColor(Colors.indigo),
-      pastelColor(Colors.cyan),
-      pastelColor(Colors.green),
-      pastelColor(Colors.red),
-      pastelColor(Colors.teal),
-      pastelColor(Colors.blue),
-      pastelColor(Colors.purple),
-      pastelColor(Colors.yellow),
-      pastelColor(Colors.orange),
-      pastelColor(Colors.pink),
-      pastelColor(Colors.lime),
-      pastelColor(Colors.amber),
+      Colors.green,
+      Colors.cyan,
+      Colors.teal,
+      AppColors.contentColorBlue,
+      Colors.red,
+      Colors.blue,
+      Colors.purple,
+      Colors.yellow,
+      Colors.orange,
+      Colors.pink,
+      Colors.lime,
+      Colors.amber,
     ];
   }
 
@@ -178,7 +178,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                                 colors[index % colors.length],
                                             color:
                                                 colors[index % colors.length],
-                                            allItem: 50,
+                                            allItem: item.sum_asset,
                                             icon: Icon(
                                               Icons.assignment,
                                               color:
@@ -213,7 +213,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                                 colors[index % colors.length],
                                             color:
                                                 colors[index % colors.length],
-                                            allItem: 50,
+                                            allItem: item.sum_asset,
                                             icon: Icon(
                                               Icons.image,
                                               color:
@@ -252,7 +252,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                                 colors[index % colors.length],
                                             color:
                                                 colors[index % colors.length],
-                                            allItem: 50,
+                                            allItem: item.sum_asset,
                                             icon: Icon(
                                               Icons.check,
                                               color:
@@ -287,7 +287,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                             valueRangePointer: item.uncheck,
                                             color:
                                                 colors[index % colors.length],
-                                            allItem: 50,
+                                            allItem: item.sum_asset,
                                             icon: Icon(
                                               Icons.cancel,
                                               color:

@@ -8,9 +8,9 @@ class SettingsDB {
     final db = await appDb.database;
     final result = await db.delete(ImportDB.field_tableName);
     if (result != 0) {
-      CustomBotToast.showSuccess('All data have been deleted');
+      CustomBotToast.showSuccess(appLocalization.localizations.delete_all_Data);
     } else {
-      CustomBotToast.showError('Failed to delete data');
+      CustomBotToast.showError(appLocalization.localizations.failed_to_delete);
     }
   }
 
@@ -18,9 +18,10 @@ class SettingsDB {
     final db = await appDb.database;
     final result = await db.delete(GalleryDB.field_tableName);
     if (result != 0) {
-      CustomBotToast.showSuccess('All images have been deleted');
+      CustomBotToast.showSuccess(
+          appLocalization.localizations.delete_all_images);
     } else {
-      CustomBotToast.showError('Failed to delete images');
+      CustomBotToast.showError(appLocalization.localizations.failed_to_delete);
     }
   }
 }
