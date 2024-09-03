@@ -76,10 +76,12 @@ class _CountPageState extends State<CountPage> {
     super.initState();
   }
 
-  Future onChangeValue() async {
-    ResponseCountModel item = await CountDB().scanBarcode(
+  Future onChangeValue(bool isTakeBarcode) async {
+    ResponseCountModel item = ResponseCountModel();
+    if (isTakeBarcode) {
+      item = await CountDB().readQrCodeAndBarcode(
+        context,
         CountModelEvent(
-          barcode: barcodeController.text.toUpperCase(),
           plan: plan,
           location: _selectedLocation,
           department: _selectedDepartment,
@@ -87,7 +89,21 @@ class _CountPageState extends State<CountPage> {
           qty: qtyController.text,
           // remark: remarkController.text,
         ),
-        context);
+      );
+    } else {
+      item = await CountDB().scanCount(
+          CountModelEvent(
+            barcode: barcodeController.text.toUpperCase(),
+            plan: plan,
+            location: _selectedLocation,
+            department: _selectedDepartment,
+            statusAsset: selectedStatus,
+            qty: qtyController.text,
+            // remark: remarkController.text,
+          ),
+          context);
+    }
+
     assetNoController.text = item.asset ?? "";
     nameController.text = item.name ?? "";
     costCenterController.text = item.costCenter ?? "";
@@ -173,11 +189,13 @@ class _CountPageState extends State<CountPage> {
                                   _selectedDepartment!.isNotEmpty) ||
                               (_selectedLocation != null &&
                                   _selectedLocation!.isNotEmpty)) {
-                            await onChangeValue();
+                            await onChangeValue(false);
                           } else {
-                            const CustomAlertDialog(
-                              title: "Warning !",
-                              message: "Please select location or department",
+                            CustomAlertDialog(
+                              title:
+                                  appLocalization.localizations.warning_title,
+                              message:
+                                  appLocalization.localizations.warning_content,
                               isWarning: true,
                             ).show(context);
                           }
@@ -185,6 +203,26 @@ class _CountPageState extends State<CountPage> {
 
                         barcodeController.clear();
                       },
+                      suffix: IconButton(
+                          onPressed: () async {
+                            if (formKeyList[1].currentState!.validate()) {
+                              if ((_selectedDepartment != null &&
+                                      _selectedDepartment!.isNotEmpty) ||
+                                  (_selectedLocation != null &&
+                                      _selectedLocation!.isNotEmpty)) {
+                                await onChangeValue(true);
+                              } else {
+                                CustomAlertDialog(
+                                  title: appLocalization
+                                      .localizations.warning_title,
+                                  message: appLocalization
+                                      .localizations.warning_content,
+                                  isWarning: true,
+                                ).show(context);
+                              }
+                            }
+                          },
+                          icon: Icon(Icons.qr_code_scanner)),
                     ),
                     const SizedBox(height: 10),
                     Custominput(

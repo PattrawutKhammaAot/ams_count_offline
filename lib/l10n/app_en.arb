@@ -68,5 +68,7 @@
 "warning_count_asset_not_in_plan":"This asset is not in the plan. Do you want to count it?",
 "btn_ok":"OK",
 "btn_save":"Save",
-   "btn_camera":"Camera"
+   "btn_camera":"Camera",
+   "warning_title": "Warning!",
+"warning_content": "Please select the location or department to be counted"
 }

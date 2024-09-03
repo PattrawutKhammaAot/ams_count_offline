@@ -12,6 +12,7 @@ import 'package:count_offline/services/database/quickType.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 import '../../extension/color_extension.dart';
 import '../../model/count/responseCountModel.dart';
@@ -49,7 +50,7 @@ class CountDB {
     return planReturn;
   }
 
-  Future<ResponseCountModel> scanBarcode(
+  Future<ResponseCountModel> scanCount(
       CountModelEvent obj, BuildContext context) async {
     try {
       ResponseCountModel itemReturn = ResponseCountModel();
@@ -535,5 +536,29 @@ class CountDB {
       print(s);
       throw Exception();
     }
+  }
+
+  Future<ResponseCountModel> readQrCodeAndBarcode(
+      BuildContext context, CountModelEvent obj) async {
+    ResponseCountModel itemReturn = ResponseCountModel();
+    var res = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SimpleBarcodeScannerPage(),
+        ));
+
+    if (res != null || res.toString() != '-1') {
+      itemReturn = await scanCount(
+          CountModelEvent(
+            barcode: res.toString(),
+            plan: obj.plan,
+            location: obj.location,
+            department: obj.department,
+            statusAsset: obj.statusAsset,
+            qty: obj.qty,
+          ),
+          context);
+    }
+    return itemReturn;
   }
 }
