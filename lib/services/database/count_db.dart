@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:barcode_scanner/scanbot_barcode_sdk.dart';
 import 'package:count_offline/component/custom_botToast.dart';
 import 'package:count_offline/main.dart';
 import 'package:count_offline/model/count/countModelEvent.dart';
@@ -12,10 +14,10 @@ import 'package:count_offline/services/database/quickType.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 import '../../extension/color_extension.dart';
 import '../../model/count/responseCountModel.dart';
+import '../../page/qr_Code_View_page.dart';
 
 enum StatusQuery { inplan, notPlan, invalid }
 
@@ -541,23 +543,21 @@ class CountDB {
   Future<ResponseCountModel> readQrCodeAndBarcode(
       BuildContext context, CountModelEvent obj) async {
     ResponseCountModel itemReturn = ResponseCountModel();
-    var res = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const SimpleBarcodeScannerPage(),
-        ));
+    var result = await BarcodeScanner.scan();
+    print("FromBarCodeScanner: ${result.rawContent}");
 
-    if (res != null || res.toString() != '-1') {
+    if (result.rawContent.isNotEmpty && result.rawContent != '-1') {
       itemReturn = await scanCount(
-          CountModelEvent(
-            barcode: res.toString(),
-            plan: obj.plan,
-            location: obj.location,
-            department: obj.department,
-            statusAsset: obj.statusAsset,
-            qty: obj.qty,
-          ),
-          context);
+        CountModelEvent(
+          barcode: result.rawContent.toUpperCase(),
+          plan: obj.plan,
+          location: obj.location,
+          department: obj.department,
+          statusAsset: obj.statusAsset,
+          qty: obj.qty,
+        ),
+        context,
+      );
     }
     return itemReturn;
   }

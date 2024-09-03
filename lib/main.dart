@@ -74,6 +74,9 @@ class MyApp extends StatelessWidget {
 Future<void> requestStoragePermission() async {
   try {
     var status = await Permission.manageExternalStorage.status;
+    //req camera permission
+    await Permission.camera.request();
+
     if (!status.isGranted) {
       if (await Permission.manageExternalStorage.request().isGranted) {
       } else {
