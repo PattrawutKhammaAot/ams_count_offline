@@ -81,6 +81,11 @@ class ImportDB {
     return prefs.getInt('import_counter') ?? 1; // Default value if not set
   }
 
+  Future<void> clearCounter() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('import_counter');
+  }
+
   Future<void> importFileExcel() async {
     try {
       EasyLoading.show(
@@ -134,10 +139,12 @@ class ImportDB {
           await insertExcelToSql(chunk, plan_id, created_dated);
 
           final progress = ((i + chunkSize) / dataWithoutHeader.length) * 100;
-          EasyLoading.showProgress(progress / 100,
-              status:
-                  '${appLocalization.localizations.import_loading} ${progress.toStringAsFixed(0)}%',
-              maskType: EasyLoadingMaskType.black);
+          if (progress <= 100) {
+            EasyLoading.showProgress(progress / 100,
+                status:
+                    '${appLocalization.localizations.import_loading} ${progress.toStringAsFixed(0)}%',
+                maskType: EasyLoadingMaskType.black);
+          }
         }
 
         // Dismiss EasyLoading
@@ -267,6 +274,7 @@ class ImportDB {
       final db = await appDb.database;
       await db.delete(field_tableName);
       await db.delete(GalleryDB.field_tableName);
+      await ImportDB().clearCounter();
     }
   }
 

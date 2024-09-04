@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:count_offline/component/custombutton.dart';
 import 'package:count_offline/model/report/viewReportEditModel.dart';
+import 'package:count_offline/services/database/quickType.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
@@ -235,6 +236,14 @@ class _EditDataCountPageState extends State<EditDataCountPage> {
               ),
             ),
             _buttonWidget(onSave: () async {
+              if (checkController.text == StatusCheck.status_uncheck) {
+                CustomAlertDialog(
+                  title: appLocalization.localizations.warning_title,
+                  message: appLocalization.localizations.warning_uncheck_save,
+                  isWarning: true,
+                ).show(context);
+                return;
+              }
               var result = await CountDB().btnSave(
                 CountModelEvent(
                   barcode: assetNoController.text,
@@ -249,6 +258,15 @@ class _EditDataCountPageState extends State<EditDataCountPage> {
               }
               _barcodeFocus.requestFocus();
             }, onCamera: () async {
+              if (checkController.text == StatusCheck.status_uncheck) {
+                CustomAlertDialog(
+                  title: appLocalization.localizations.warning_title,
+                  message: appLocalization.localizations.warning_uncheck_photo,
+                  isWarning: true,
+                ).show(context);
+
+                return;
+              }
               var result = await CustomCamera().pickFileFromCamera();
 
               if (result != null) {

@@ -59,6 +59,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   barcode_scanner: ^5.1.0
   barcode_scan2: ^4.3.3
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

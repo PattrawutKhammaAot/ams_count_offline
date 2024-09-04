@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:count_offline/page/dashboard_page.dart';
 import 'package:count_offline/page/loading_page.dart';
 import 'package:count_offline/routes.dart';
 import 'package:count_offline/services/database/sqlite_db.dart';
@@ -28,6 +29,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider<ThemeNotifier>(create: (_) => ThemeNotifier()),
         ChangeNotifierProvider<LocaleNotifier>(create: (_) => LocaleNotifier()),
+        ChangeNotifierProvider<DashBoardNotifier>(
+            create: (_) => DashBoardNotifier()),
       ],
       child: MyApp(routeObserver: routeObserver),
     ),
@@ -73,15 +76,16 @@ class MyApp extends StatelessWidget {
 
 Future<void> requestStoragePermission() async {
   try {
-    var status = await Permission.manageExternalStorage.status;
-    //req camera permission
-    await Permission.camera.request();
+    // Request both camera and manage external storage permissions at the same time
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.manageExternalStorage,
+    ].request();
 
-    if (!status.isGranted) {
-      if (await Permission.manageExternalStorage.request().isGranted) {
-      } else {
-        openAppSettings();
-      }
+    // Check the status of manage external storage permission
+    if (!statuses[Permission.manageExternalStorage]!.isGranted) {
+      // If not granted, open app settings
+      openAppSettings();
     }
   } catch (e, s) {
     print("$e$s");

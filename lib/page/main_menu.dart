@@ -1,10 +1,13 @@
 import 'package:count_offline/component/custom_botToast.dart';
+import 'package:count_offline/extension/color_extension.dart';
 import 'package:count_offline/main.dart';
 import 'package:count_offline/page/dashboard_page.dart';
 import 'package:count_offline/routes.dart';
+import 'package:count_offline/services/database/dashboard_db.dart';
 import 'package:count_offline/services/localizationService.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import '../services/theme/theme_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -115,7 +118,10 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                         .localizations.menu_import,
                                     routeName: Routes.import,
                                     onPressed: () => Navigator.pushNamed(
-                                        context, Routes.import),
+                                            context, Routes.import)
+                                        .then((v) =>
+                                            DashboardDB.refreshDashboard(
+                                                context)),
                                   ),
                                   MenuItem(
                                     imagePath: 'assets/images/scan.png',
@@ -123,7 +129,10 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                         .localizations.menu_count,
                                     routeName: '/count',
                                     onPressed: () => Navigator.pushNamed(
-                                        context, Routes.select_plan),
+                                            context, Routes.select_plan)
+                                        .then((v) =>
+                                            DashboardDB.refreshDashboard(
+                                                context)),
                                   ),
                                   MenuItem(
                                     imagePath: 'assets/images/gallery.png',
@@ -146,7 +155,10 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                         .localizations.menu_report,
                                     routeName: '/report',
                                     onPressed: () => Navigator.pushNamed(
-                                        context, Routes.report),
+                                            context, Routes.report)
+                                        .then((v) =>
+                                            DashboardDB.refreshDashboard(
+                                                context)),
                                   ),
                                   MenuItem(
                                     imagePath: 'assets/images/export.png',
@@ -176,21 +188,26 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
               ),
             ),
             SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(child: Divider()),
-                SizedBox(width: 10),
-                Text(
-                  LocalizationService().localizations.overview,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromRGBO(60, 60, 60, 0.6),
+            Shimmer.fromColors(
+              baseColor: Colors.grey.shade800,
+              highlightColor: Colors.grey.shade100,
+              period: const Duration(milliseconds: 2500),
+              child: Row(
+                children: [
+                  Expanded(child: Divider()),
+                  SizedBox(width: 10),
+                  Text(
+                    LocalizationService().localizations.overview,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromRGBO(60, 60, 60, 0.6),
+                    ),
                   ),
-                ),
-                SizedBox(width: 10),
-                Expanded(child: Divider()),
-              ],
+                  SizedBox(width: 10),
+                  Expanded(child: Divider()),
+                ],
+              ),
             ),
             Expanded(
               child: Container(

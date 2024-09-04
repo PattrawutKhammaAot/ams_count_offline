@@ -1,6 +1,9 @@
+import 'package:count_offline/page/dashboard_page.dart';
 import 'package:count_offline/services/database/gallery_db.dart';
 import 'package:count_offline/services/database/import_db.dart';
 import 'package:count_offline/services/database/quickType.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../main.dart';
@@ -49,5 +52,9 @@ class DashboardDB {
     }
 
     return planReturn;
+  }
+
+  static void refreshDashboard(BuildContext context) {
+    Provider.of<DashBoardNotifier>(context, listen: false).refreshDashboard();
   }
 }

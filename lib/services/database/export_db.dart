@@ -163,7 +163,7 @@ class ExportDB {
                 await exportImageToFolder(imageBytes, fileName);
 
             sheet.getRangeByIndex(currentRow, 16).setText(
-                "Folder : ${filePath.substring(filePath.indexOf('ams_export'))}");
+                "${filePath.substring(filePath.indexOf('ams_export'))}");
             // try {
             //   final xlsio.Picture picture =
             //       sheet.pictures.addStream(currentRow, 16, imageBytes);

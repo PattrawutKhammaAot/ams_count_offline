@@ -40,7 +40,7 @@ class SettingPage extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () async {
-                          await SettingsDB().deleteAllData();
+                          await SettingsDB().deleteAllData(context);
                           // Perform clear transaction action
                           Navigator.of(context).pop();
                         },
@@ -74,7 +74,7 @@ class SettingPage extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () async {
-                          await SettingsDB().deleteAllImage();
+                          await SettingsDB().deleteAllImage(context);
                           // Perform clear image action
                           Navigator.of(context).pop();
                         },

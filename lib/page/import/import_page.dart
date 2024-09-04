@@ -41,7 +41,6 @@ class _ImportPageState extends State<ImportPage> {
       ),
       body: RefreshIndicator(
         onRefresh: () {
-          print("refresh");
           return ImportDB().selectPlan().then((value) {
             setState(() {
               itemPlan = value;
@@ -205,6 +204,7 @@ class _ImportPageState extends State<ImportPage> {
                             itemPlan = value;
                           });
                         }));
+
                 EasyLoading.dismiss();
 
                 setState(() {});
