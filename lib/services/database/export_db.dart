@@ -4,6 +4,7 @@ import 'package:count_offline/main.dart';
 import 'package:count_offline/model/export/exportModel.dart';
 import 'package:count_offline/services/database/gallery_db.dart';
 import 'package:count_offline/services/database/import_db.dart';
+import 'package:count_offline/services/theme/storage_manager.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xlsio;
 import 'dart:typed_data';
@@ -27,6 +28,7 @@ class ExportDB {
 
   Future<void> ExportAllAssetByPlan(String plan) async {
     try {
+      String gettingPath = await StorageManager.getDrive();
       final db = await appDb.database;
       const int batchSize = 500;
       int offset = 0;
@@ -162,8 +164,12 @@ class ExportDB {
             final String filePath =
                 await exportImageToFolder(imageBytes, fileName);
 
-            sheet.getRangeByIndex(currentRow, 16).setText(
-                "${filePath.substring(filePath.indexOf('ams_export'))}");
+            final addressLink =
+                "$gettingPath:/${filePath.substring(filePath.indexOf('ams_export'))}";
+
+            sheet.getRangeByIndex(currentRow, 16).setText(addressLink);
+            sheet.hyperlinks.add(sheet.getRangeByIndex(currentRow, 16),
+                xlsio.HyperlinkType.url, addressLink);
             // try {
             //   final xlsio.Picture picture =
             //       sheet.pictures.addStream(currentRow, 16, imageBytes);

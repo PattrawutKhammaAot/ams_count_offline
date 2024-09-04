@@ -24,4 +24,14 @@ class StorageManager {
     final prefs = await SharedPreferences.getInstance();
     return prefs.remove(key);
   }
+
+  static Future<void> settingDrive(String drive) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("drive", drive);
+  }
+
+  static Future<String> getDrive() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString("drive") ?? "D";
+  }
 }
