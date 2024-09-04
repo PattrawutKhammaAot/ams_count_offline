@@ -543,13 +543,13 @@ class CountDB {
   Future<ResponseCountModel> readQrCodeAndBarcode(
       BuildContext context, CountModelEvent obj) async {
     ResponseCountModel itemReturn = ResponseCountModel();
-    var result = await BarcodeScanner.scan();
-    print("FromBarCodeScanner: ${result.rawContent}");
+    var barcodeResult = await BarcodeScanner.scan();
 
-    if (result.rawContent.isNotEmpty && result.rawContent != '-1') {
+    if (barcodeResult.rawContent.isNotEmpty &&
+        barcodeResult.rawContent != '-1') {
       itemReturn = await scanCount(
         CountModelEvent(
-          barcode: result.rawContent.toUpperCase(),
+          barcode: barcodeResult.rawContent.toUpperCase(),
           plan: obj.plan,
           location: obj.location,
           department: obj.department,

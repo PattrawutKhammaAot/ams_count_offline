@@ -1,3 +1,4 @@
+import 'package:count_offline/component/custom_botToast.dart';
 import 'package:count_offline/main.dart';
 import 'package:count_offline/page/dashboard_page.dart';
 import 'package:count_offline/routes.dart';
@@ -35,6 +36,11 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          CustomBotToast.showWarning("Can't back this screen");
+        }
+      },
       child: Scaffold(
         backgroundColor: Color.fromARGB(248, 255, 255, 255),
         body: Column(

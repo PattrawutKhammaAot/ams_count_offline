@@ -27,9 +27,6 @@ class ExportDB {
 
   Future<void> ExportAllAssetByPlan(String plan) async {
     try {
-      EasyLoading.show(
-          status: appLocalization.localizations.loading,
-          maskType: EasyLoadingMaskType.black);
       final db = await appDb.database;
       const int batchSize = 500;
       int offset = 0;
@@ -90,9 +87,14 @@ class ExportDB {
             offset: offset,
           );
           Uint8List? imageBytes;
+          var imagesName;
 
-          // Fetch image bytes for the corresponding asset
           if (images.isNotEmpty) {
+            imagesName = images.firstWhere(
+                (image) =>
+                    image[GalleryDB.field_asset] ==
+                    assets[i][ImportDB.field_asset],
+                orElse: () => <String, Object?>{})[GalleryDB.filed_name_image];
             var imageFilePath = images.firstWhere(
               (image) =>
                   image[GalleryDB.field_asset] ==
@@ -156,10 +158,12 @@ class ExportDB {
               assets[i][ImportDB.field_asset_not_in_plan]?.toString() ?? '');
           // Insert image if it exists
           if (imageBytes != null) {
-            final String fileName = '${assets[i][ImportDB.field_asset]}.jpg';
+            final String fileName = imagesName;
             final String filePath =
                 await exportImageToFolder(imageBytes, fileName);
-            sheet.getRangeByIndex(currentRow, 16).setText(filePath);
+
+            sheet.getRangeByIndex(currentRow, 16).setText(
+                "Folder : ${filePath.substring(filePath.indexOf('ams_export'))}");
             // try {
             //   final xlsio.Picture picture =
             //       sheet.pictures.addStream(currentRow, 16, imageBytes);

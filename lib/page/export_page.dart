@@ -75,7 +75,9 @@ class _ExportPageState extends State<ExportPage> {
                     text: appLocalization.localizations.export_btn_export,
                     color: AppColors.contentColorBlue,
                     onPressed: () async {
-                      EasyLoading.show(status: 'loading data ...');
+                      EasyLoading.show(
+                          status: appLocalization.localizations.loading,
+                          maskType: EasyLoadingMaskType.black);
                       await ExportDB().createFolderInDocument();
                       await ExportDB().ExportAllAssetByPlan(selectedValue!);
                     },

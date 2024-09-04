@@ -44,7 +44,7 @@ class GalleryDB {
 
       // สร้างพาธสำหรับเก็บรูปภาพ
       final String imageFileName =
-          "${assetValue}_${DateFormat('HHmmss').format(DateTime.now())}.jpg";
+          "${assetValue}-${DateFormat('HHmmss').format(DateTime.now())}.jpg";
       final String newImagePath = '$appDocPath/$imageFileName';
 
       // ตรวจสอบว่าไฟล์รูปภาพมีอยู่และไม่ว่างเปล่า

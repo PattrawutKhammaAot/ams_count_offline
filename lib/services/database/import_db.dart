@@ -36,7 +36,7 @@ class ImportDB {
   static String field_count_department = 'count_department';
   static String field_remark = 'remark';
   static String field_asset_not_in_plan = 'asset_not_in_plan';
-  static String field_file_image = 'file_image';
+  static String image_file_path = 'file_image';
   static String field_status_plan = 'status_plan';
   static String field_qty = 'qty';
 
@@ -62,7 +62,7 @@ class ImportDB {
         '$field_remark ${QuickTypes.TEXT},'
         '$field_asset_not_in_plan ${QuickTypes.TEXT},'
         '$field_qty ${QuickTypes.TEXT},'
-        '$field_file_image BLOB,'
+        '$image_file_path BLOB,'
         '$field_status_plan ${QuickTypes.TEXT},'
         '$field_user_def_1 ${QuickTypes.TEXT},'
         '$field_user_def_2 ${QuickTypes.TEXT},'
@@ -266,6 +266,7 @@ class ImportDB {
     } else {
       final db = await appDb.database;
       await db.delete(field_tableName);
+      await db.delete(GalleryDB.field_tableName);
     }
   }
 
