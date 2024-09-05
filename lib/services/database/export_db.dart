@@ -5,6 +5,7 @@ import 'package:count_offline/model/export/exportModel.dart';
 import 'package:count_offline/services/database/gallery_db.dart';
 import 'package:count_offline/services/database/import_db.dart';
 import 'package:count_offline/services/theme/storage_manager.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xlsio;
 import 'dart:typed_data';
@@ -38,25 +39,33 @@ class ExportDB {
       final xlsio.Workbook workbook = xlsio.Workbook();
       final xlsio.Worksheet sheet = workbook.worksheets[0];
       await exportSheet2Image(workbook, plan);
+
+      final headers = [
+        'Plan',
+        'Asset',
+        'Description',
+        'Cost Center',
+        'Capitalized on',
+        'Location',
+        'Department',
+        'Owner Name',
+        'Status Check',
+        'Status Asset',
+        'Scan Date',
+        'Count Location',
+        'Count Department',
+        'Remark',
+        'Asset Not In Plan',
+        'Path image',
+        'USER DEF1',
+        'USER DEF2'
+      ];
       // Add headers
-      sheet.getRangeByName('A1').setText('Plan');
-      sheet.getRangeByName('B1').setText('Asset');
-      sheet.getRangeByName('C1').setText('Description');
-      sheet.getRangeByName('D1').setText('Cost Center');
-      sheet.getRangeByName('E1').setText('Capitalized on');
-      sheet.getRangeByName('F1').setText('Location');
-      sheet.getRangeByName('G1').setText('Department');
-      sheet.getRangeByName('H1').setText('Owner Name');
-      sheet.getRangeByName('I1').setText('Status Check');
-      sheet.getRangeByName('J1').setText('Status Asset');
-      sheet.getRangeByName('K1').setText('Scan Date');
-      sheet.getRangeByName('L1').setText('Count Location');
-      sheet.getRangeByName('M1').setText('Count Department');
-      sheet.getRangeByName('N1').setText('Remark');
-      sheet.getRangeByName('O1').setText('Asset Not In Plan');
-      sheet.getRangeByName('P1').setText('Image');
-      sheet.getRangeByName('Q1').setText('USER DEF1');
-      sheet.getRangeByName('R1').setText('USER DEF2');
+      for (int i = 0; i < headers.length; i++) {
+        final cell = sheet.getRangeByIndex(1, i + 1);
+        cell.setText(headers[i]);
+        cell.cellStyle.backColor = '#FFD700';
+      }
 
       int currentRow = 2;
 

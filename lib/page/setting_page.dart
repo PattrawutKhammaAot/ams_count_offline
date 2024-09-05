@@ -30,8 +30,13 @@ class SettingPage extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text(appLocalization
-                        .localizations.setting_alert_clear_data_title),
+                    title: Row(
+                      children: [
+                        Text(appLocalization
+                            .localizations.setting_alert_clear_data_title),
+                        Icon(Icons.warning, color: Colors.red),
+                      ],
+                    ),
                     content: Text(appLocalization
                         .localizations.setting_alert_clear_data_content),
                     actions: [
@@ -64,8 +69,13 @@ class SettingPage extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text(appLocalization
-                        .localizations.setting_alert_clear_image_title),
+                    title: Row(
+                      children: [
+                        Text(appLocalization
+                            .localizations.setting_alert_clear_image_title),
+                        Icon(Icons.warning, color: Colors.red),
+                      ],
+                    ),
                     content: Text(appLocalization
                         .localizations.setting_alert_clear_image_content),
                     actions: [
