@@ -23,6 +23,9 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      DashboardDB.refreshDashboard(context);
+    });
     super.initState();
   }
 

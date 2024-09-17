@@ -68,6 +68,9 @@ class _ViewImportPageState extends State<ViewImportPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.white, // Change this to your desired color
+        ),
         backgroundColor: Colors.blue,
         title: Text('Plan : $plan',
             style: TextStyle(color: Colors.white, fontSize: 20)),
