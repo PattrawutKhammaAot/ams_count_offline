@@ -303,6 +303,11 @@ class _CountPageState extends State<CountPage> {
               ),
             ),
             _buttonWidget(onSave: () async {
+              if (assetNoController.text.isEmpty) {
+                CustomBotToast.showWarning(
+                    appLocalization.localizations.warning_uncheck_save);
+                return;
+              }
               var result = await CountDB().btnSave(
                 CountModelEvent(
                   barcode: assetNoController.text,
@@ -317,6 +322,11 @@ class _CountPageState extends State<CountPage> {
               }
               _barcodeFocus.requestFocus();
             }, onCamera: () async {
+              if (assetNoController.text.isEmpty) {
+                CustomBotToast.showWarning(
+                    appLocalization.localizations.warning_uncheck_photo);
+                return;
+              }
               var result = await CustomCamera().pickFileFromCamera();
 
               if (result != null) {

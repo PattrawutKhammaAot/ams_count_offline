@@ -73,6 +73,6 @@
    "warning_title": "Warning!",
 "warning_content": "Please select the location or department to be counted",
 "warning_uncheck_save": "Cannot save because the asset has not been counted",
-"warning_uncheck_photo": "Cannot save because the asset has not been counted",
+"warning_uncheck_photo": "Cannot Upload Image because the asset has not been counted",
 "settings_path":"Config Path Images"
 }
