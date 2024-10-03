@@ -315,8 +315,11 @@ class _EditDataCountPageState extends State<EditDataCountPage> {
         ],
         value: _selectedLocation,
         onChanged: (value) async {
-          _selectedLocation = value.toString();
-          _departmentFocus.requestFocus();
+          if (value != null) {
+            _selectedLocation = value.toString();
+            _departmentFocus.requestFocus();
+          }
+
           setState(() {});
         },
         onSaved: (value) {

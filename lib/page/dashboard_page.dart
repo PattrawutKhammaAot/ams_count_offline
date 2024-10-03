@@ -109,6 +109,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                 );
               } else {
                 return ListView.builder(
+                  scrollDirection: Axis.vertical,
                   physics: BouncingScrollPhysics(),
                   padding: EdgeInsets.only(bottom: 60),
                   controller: _scrollController,
