@@ -135,8 +135,8 @@ class _GalleryPageState extends State<GalleryPage> {
                                                         ),
                                                       ),
                                                       Label(
-                                                        "${_imageList[index].asset}",
-                                                        color: Colors.white,
+                                                        "${_imageList[index].plan} : ${_imageList[index].asset} ",
+                                                        color: Colors.black,
                                                       ),
                                                       Row(
                                                         crossAxisAlignment:

@@ -56,17 +56,15 @@ class CountDB {
       CountModelEvent obj, BuildContext context) async {
     try {
       ResponseCountModel itemReturn = ResponseCountModel();
-      StatusQuery isCheckPlan = await _checkInPlan(obj);
-
-      print("isCheckPlan $isCheckPlan");
+      StatusQuery isAssetINPlan = await _checkAssetInPlan(obj);
       bool isCheckLocation;
       bool isCheckDepartment;
-      if (isCheckPlan == StatusQuery.inplan)
+      if (isAssetINPlan == StatusQuery.inplan)
       //อยู่ในแผน
       {
-        bool isChecked = await _checkStatusAsset(obj);
+        bool isCounted = await _checkStatusAsset(obj);
         //ถ้านับไปแล้ว
-        if (isChecked) {
+        if (isCounted) {
           bool isConfirm = await showDialogConfirm(context,
               title: appLocalization.localizations.warning_count_asset,
               content: appLocalization
@@ -104,7 +102,7 @@ class CountDB {
                     .localizations.warning_count_department_not_match);
               }
             }
-            itemReturn = await updateInPlan(obj);
+            itemReturn = await _updateInPlan(obj);
           }
         } else {
           //เช็คว่ามีLocation หรือ Department มีส่งมาไหม
@@ -137,11 +135,11 @@ class CountDB {
                   .localizations.warning_count_department_not_match);
             }
           }
-          itemReturn = await updateInPlan(obj);
+          itemReturn = await _updateInPlan(obj);
         }
       }
       //ไม่ได้อยู่ในแผน
-      else if (isCheckPlan == StatusQuery.notPlan) {
+      else if (isAssetINPlan == StatusQuery.notPlan) {
         bool isConfirmNotPlan = await showDialogConfirm(context,
             title: appLocalization.localizations.warning_count_asset,
             content:
@@ -181,7 +179,7 @@ class CountDB {
           }
           itemReturn = await _insertNotINPlan(obj);
         }
-      } else if (isCheckPlan == StatusQuery.invalid) {
+      } else if (isAssetINPlan == StatusQuery.invalid) {
         CustomBotToast.showWarning(appLocalization.localizations.no_data_found);
       }
       return itemReturn;
@@ -206,7 +204,8 @@ class CountDB {
     }
   }
 
-  Future<StatusQuery> _checkInPlan(CountModelEvent obj) async {
+  //ตรวจสอบว่า Assetอยู่ใน Plan หรือไม่
+  Future<StatusQuery> _checkAssetInPlan(CountModelEvent obj) async {
     final db = await appDb.database;
     final checkInPlan = await db.query(tableName,
         where:
@@ -228,12 +227,13 @@ class CountDB {
     }
   }
 
-  Future<ResponseCountModel> updateInPlan(CountModelEvent obj) async {
+  Future<ResponseCountModel> _updateInPlan(CountModelEvent obj) async {
     try {
       ResponseCountModel itemReturn = ResponseCountModel();
       final db = await appDb.database;
 
-      final queryCheckAssetNotInPlan = await db.query(
+      //ดึงStatus ของ Assets ตัวมันเองออกมา
+      final checkStatusInAsset = await db.query(
         tableName,
         where:
             ImportDB.field_asset + " = ? AND " + ImportDB.field_plan + " = ?",
@@ -251,7 +251,7 @@ class CountDB {
             ImportDB.field_scan_date:
                 DateFormat('dd-MM-yyyy HH:mm').format(DateTime.now()),
             ImportDB.field_status_check: StatusCheck.status_checked,
-            ImportDB.field_asset_not_in_plan: queryCheckAssetNotInPlan[0]
+            ImportDB.field_asset_not_in_plan: checkStatusInAsset[0]
                             [ImportDB.field_asset_not_in_plan]
                         .toString() ==
                     "YES"
@@ -326,6 +326,7 @@ class CountDB {
     }
   }
 
+  //ตรวจสอบว่า Asset นั้นๆ มีการนับไปแล้วหรือยัง
   Future<void> updateStatusPlan(CountModelEvent obj) async {
     final db = await appDb.database;
     final queryCheckStatusPlan = await db.query(tableName,

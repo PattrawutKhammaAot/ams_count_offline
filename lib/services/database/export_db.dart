@@ -1,18 +1,22 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:count_offline/main.dart';
+import 'package:count_offline/model/dashboard/view_dashboard_model.dart';
 import 'package:count_offline/model/export/exportModel.dart';
+import 'package:count_offline/services/database/dashboard_db.dart';
 import 'package:count_offline/services/database/gallery_db.dart';
 import 'package:count_offline/services/database/import_db.dart';
+import 'package:count_offline/services/database/quickType.dart';
 import 'package:count_offline/services/theme/storage_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xlsio;
-import 'dart:typed_data';
-import 'dart:io';
-import 'package:excel/excel.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xlsio;
 
 class ExportDB {
   final String mainFolderPath = '/storage/emulated/0/ams_export';
@@ -31,7 +35,7 @@ class ExportDB {
     try {
       String gettingPath = await StorageManager.getDrive();
       final db = await appDb.database;
-      const int batchSize = 500;
+      const int batchSize = 100; // Reduce batch size to lower memory usage
       int offset = 0;
       bool hasMoreData = true;
 
@@ -70,6 +74,13 @@ class ExportDB {
       int currentRow = 2;
 
       // Show loading
+      EasyLoading.show(
+          status: 'Loading...', maskType: EasyLoadingMaskType.black);
+
+      // Get total count of assets for progress calculation
+      final totalAssets = Sqflite.firstIntValue(await db.rawQuery(
+          'SELECT COUNT(*) FROM ${ImportDB.field_tableName} WHERE ${ImportDB.field_plan} = ?',
+          [plan]))!;
 
       while (hasMoreData) {
         // Query assets data in batches
@@ -80,8 +91,6 @@ class ExportDB {
           limit: batchSize,
           offset: offset,
         );
-
-        // Query associated images
 
         if (assets.isEmpty) {
           hasMoreData = false;
@@ -94,8 +103,6 @@ class ExportDB {
             where:
                 '${GalleryDB.field_plan} = ? AND ${GalleryDB.field_asset} = ?',
             whereArgs: [plan, assets[i][ImportDB.field_asset]],
-            limit: batchSize,
-            offset: offset,
           );
           Uint8List? imageBytes;
           var imagesName;
@@ -179,21 +186,6 @@ class ExportDB {
             sheet.getRangeByIndex(currentRow, 16).setText(addressLink);
             sheet.hyperlinks.add(sheet.getRangeByIndex(currentRow, 16),
                 xlsio.HyperlinkType.url, addressLink);
-            // try {
-            //   final xlsio.Picture picture =
-            //       sheet.pictures.addStream(currentRow, 16, imageBytes);
-            //   // Set the size of the picture
-            //   picture.width = 100;
-            //   picture.height = 100;
-
-            //   // Adjust the row height and column width to fit the picture
-            //   sheet.getRangeByIndex(currentRow, 16).rowHeight = 100;
-            //   sheet.getRangeByIndex(currentRow, 16).columnWidth = 30;
-
-            //   // Optionally, set the position of the picture within the cell
-            // } catch (e) {
-            //   print('Error exporting image: $e');
-            // }
           } else {
             sheet.getRangeByIndex(currentRow, 16).setText(' ');
           }
@@ -211,11 +203,11 @@ class ExportDB {
         }
 
         // Update progress
-        final progress = (offset / (offset + batchSize)) * 100;
+        final progress = (offset + assets.length) / totalAssets;
         EasyLoading.showProgress(
-          offset / (offset + batchSize),
+          progress,
           status:
-              '${appLocalization.localizations.export_loading}. ${progress.toStringAsFixed(0)}%',
+              '${appLocalization.localizations.export_loading}. ${(progress * 100).toStringAsFixed(0)}%',
           maskType: EasyLoadingMaskType.black,
         );
 
@@ -251,6 +243,7 @@ class ExportDB {
           '${appLocalization.localizations.export_to} $text_name $baseFileName($fileIndex)$fileExtension',
           maskType: EasyLoadingMaskType.black);
     } catch (e, s) {
+      EasyLoading.showError('$e');
       print(e);
       print(s);
     } finally {
@@ -269,7 +262,7 @@ class ExportDB {
       worksheet.getRangeByName('C1').setText('Image');
 
       bool hasMoreData = true;
-      const int batchSize = 500;
+      const int batchSize = 100; // Reduce batch size to lower memory usage
       int offset = 0;
       int currentRow = 2;
 
@@ -375,5 +368,53 @@ class ExportDB {
     } catch (e) {
       print('Error creating folder: $e');
     }
+  }
+
+  Future<List<ViewDashboardModel>> getDetailFromPlan(valuePlan) async {
+    final master = ImportDB.field_tableName;
+    final gallery = GalleryDB.field_tableName;
+    final db = await appDb.database;
+    final resultPlan = await db.query(master,
+        where: "${ImportDB.field_plan} = ?",
+        columns: [ImportDB.field_plan],
+        whereArgs: [valuePlan],
+        limit: 1);
+
+    // Extract the list of plans
+    final plan = resultPlan.first['Plan'];
+
+    final List<ViewDashboardModel> planReturn = [];
+
+    final countPlanCheck = await db.rawQuery(
+        'SELECT COUNT(*) FROM $master WHERE ${ImportDB.field_status_check} = ? AND ${ImportDB.field_plan} = ?',
+        [StatusCheck.status_checked, plan]);
+
+    final countPlanUncheck = await db.rawQuery(
+        'SELECT COUNT(*) FROM $master WHERE ${ImportDB.field_status_check} = ? AND ${ImportDB.field_plan} = ?',
+        [StatusCheck.status_uncheck, plan]);
+    final countPlanImageList = await db.rawQuery(
+        'SELECT COUNT(*) FROM $gallery WHERE ${GalleryDB.field_plan} = ?',
+        [plan]);
+    final countAssetInPlan = await db.rawQuery(
+        'SELECT COUNT(*) FROM $master WHERE ${ImportDB.field_plan} = ?',
+        [plan]);
+
+    final totalListAsset = Sqflite.firstIntValue(countAssetInPlan);
+    final totalImageList = Sqflite.firstIntValue(countPlanImageList);
+    final totalCheck = Sqflite.firstIntValue(countPlanCheck);
+    final totalUncheck = Sqflite.firstIntValue(countPlanUncheck);
+
+    planReturn.add(ViewDashboardModel(
+      sum_asset: totalListAsset,
+      plan: plan.toString(),
+      uncheck: totalUncheck,
+      check: totalCheck,
+      image: totalImageList,
+    ));
+    if (kDebugMode) {
+      print(planReturn);
+    }
+
+    return planReturn;
   }
 }
