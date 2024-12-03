@@ -19,8 +19,8 @@ final botToast = BotToastInit();
 final appLocalization = LocalizationService();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Permission.storage.request();
   await Permission.manageExternalStorage.request();
+  await Permission.storage.request();
   await Permission.camera.request();
   await appDb.initializeDatabase();
   runApp(

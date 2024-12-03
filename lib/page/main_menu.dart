@@ -94,94 +94,96 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                   ),
                   Row(
                     children: [
-                      Container(
-                        margin: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Color.fromRGBO(210, 212, 215, 1),
+                      Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Color.fromRGBO(210, 212, 215, 1),
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ),
                           ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                        child: SizedBox(
-                          height: 210,
-                          width: MediaQuery.sizeOf(context).width * 0.89,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  MenuItem(
-                                    imagePath: 'assets/images/import.png',
-                                    text: appLocalization
-                                        .localizations.menu_import,
-                                    routeName: Routes.import,
-                                    onPressed: () => Navigator.pushNamed(
-                                            context, Routes.import)
-                                        .then((v) =>
-                                            DashboardDB.refreshDashboard(
-                                                context)),
-                                  ),
-                                  MenuItem(
-                                    imagePath: 'assets/images/scan.png',
-                                    text: appLocalization
-                                        .localizations.menu_count,
-                                    routeName: '/count',
-                                    onPressed: () => Navigator.pushNamed(
-                                            context, Routes.select_plan)
-                                        .then((v) =>
-                                            DashboardDB.refreshDashboard(
-                                                context)),
-                                  ),
-                                  MenuItem(
-                                    imagePath: 'assets/images/gallery.png',
-                                    text: appLocalization
-                                        .localizations.menu_gallery,
-                                    routeName: '/gallery',
-                                    onPressed: () => Navigator.pushNamed(
-                                        context, Routes.gallery),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  MenuItem(
-                                    imagePath: 'assets/images/report.png',
-                                    text: appLocalization
-                                        .localizations.menu_report,
-                                    routeName: '/report',
-                                    onPressed: () => Navigator.pushNamed(
-                                            context, Routes.report)
-                                        .then((v) =>
-                                            DashboardDB.refreshDashboard(
-                                                context)),
-                                  ),
-                                  MenuItem(
-                                    imagePath: 'assets/images/export.png',
-                                    text: appLocalization
-                                        .localizations.menu_export,
-                                    routeName: '/export',
-                                    onPressed: () => Navigator.pushNamed(
-                                        context, Routes.export),
-                                  ),
-                                  MenuItem(
-                                    imagePath: 'assets/images/settings.png',
-                                    text: appLocalization
-                                        .localizations.menu_setting,
-                                    routeName: '/setting',
-                                    onPressed: () => Navigator.pushNamed(
-                                        context, Routes.setting),
-                                  ),
-                                ],
-                              ),
-                            ],
+                          child: SizedBox(
+                            height: 210,
+                            width: MediaQuery.sizeOf(context).width * 0.89,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    MenuItem(
+                                      imagePath: 'assets/images/import.png',
+                                      text: appLocalization
+                                          .localizations.menu_import,
+                                      routeName: Routes.import,
+                                      onPressed: () => Navigator.pushNamed(
+                                              context, Routes.import)
+                                          .then((v) =>
+                                              DashboardDB.refreshDashboard(
+                                                  context)),
+                                    ),
+                                    MenuItem(
+                                      imagePath: 'assets/images/scan.png',
+                                      text: appLocalization
+                                          .localizations.menu_count,
+                                      routeName: '/count',
+                                      onPressed: () => Navigator.pushNamed(
+                                              context, Routes.select_plan)
+                                          .then((v) =>
+                                              DashboardDB.refreshDashboard(
+                                                  context)),
+                                    ),
+                                    MenuItem(
+                                      imagePath: 'assets/images/gallery.png',
+                                      text: appLocalization
+                                          .localizations.menu_gallery,
+                                      routeName: '/gallery',
+                                      onPressed: () => Navigator.pushNamed(
+                                          context, Routes.gallery),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    MenuItem(
+                                      imagePath: 'assets/images/report.png',
+                                      text: appLocalization
+                                          .localizations.menu_report,
+                                      routeName: '/report',
+                                      onPressed: () => Navigator.pushNamed(
+                                              context, Routes.report)
+                                          .then((v) =>
+                                              DashboardDB.refreshDashboard(
+                                                  context)),
+                                    ),
+                                    MenuItem(
+                                      imagePath: 'assets/images/export.png',
+                                      text: appLocalization
+                                          .localizations.menu_export,
+                                      routeName: '/export',
+                                      onPressed: () => Navigator.pushNamed(
+                                          context, Routes.export),
+                                    ),
+                                    MenuItem(
+                                      imagePath: 'assets/images/settings.png',
+                                      text: appLocalization
+                                          .localizations.menu_setting,
+                                      routeName: '/setting',
+                                      onPressed: () => Navigator.pushNamed(
+                                          context, Routes.setting),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
