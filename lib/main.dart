@@ -19,11 +19,10 @@ final botToast = BotToastInit();
 final appLocalization = LocalizationService();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Permission.storage.request();
+  await Permission.manageExternalStorage.request();
+  await Permission.camera.request();
   await appDb.initializeDatabase();
-  final RouteObserver<PageRoute> routeObserver = CustomRouteObserver();
-  configLoading();
-
   runApp(
     MultiProvider(
       providers: [
@@ -32,9 +31,27 @@ void main() async {
         ChangeNotifierProvider<DashBoardNotifier>(
             create: (_) => DashBoardNotifier()),
       ],
-      child: MyApp(routeObserver: routeObserver),
+      child: MyApp(routeObserver: CustomRouteObserver()),
     ),
   );
+
+  // await Permission.storage.request().then((p) async {}).then((value) {
+  //   final RouteObserver<PageRoute> routeObserver = CustomRouteObserver();
+  //   configLoading();
+  //
+  //   runApp(
+  //     MultiProvider(
+  //       providers: [
+  //         ChangeNotifierProvider<ThemeNotifier>(create: (_) => ThemeNotifier()),
+  //         ChangeNotifierProvider<LocaleNotifier>(
+  //             create: (_) => LocaleNotifier()),
+  //         ChangeNotifierProvider<DashBoardNotifier>(
+  //             create: (_) => DashBoardNotifier()),
+  //       ],
+  //       child: MyApp(routeObserver: routeObserver),
+  //     ),
+  //   );
+  // });
 }
 
 class MyApp extends StatelessWidget {
@@ -50,7 +67,7 @@ class MyApp extends StatelessWidget {
           builder: (context, child) {
             appLocalization.setLocalizations(context);
 
-            requestStoragePermission();
+            // requestStoragePermission();
 
             child = easyLoading(context, child);
             child = botToast(context, child);
@@ -79,13 +96,15 @@ Future<void> requestStoragePermission() async {
     // Request both camera and manage external storage permissions at the same time
     Map<Permission, PermissionStatus> statuses = await [
       Permission.camera,
-      Permission.manageExternalStorage,
+      Permission.storage,
     ].request();
 
     // Check the status of manage external storage permission
-    if (!statuses[Permission.manageExternalStorage]!.isGranted) {
+    if (!statuses[Permission.storage]!.isGranted) {
       // If not granted, open app settings
       openAppSettings();
+    } else {
+      await appDb.initializeDatabase();
     }
   } catch (e, s) {
     print("$e$s");
