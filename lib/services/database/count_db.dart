@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:barcode_scan2/barcode_scan2.dart';
-import 'package:barcode_scanner/scanbot_barcode_sdk.dart';
+
 import 'package:count_offline/component/custom_botToast.dart';
 import 'package:count_offline/main.dart';
 import 'package:count_offline/model/count/countModelEvent.dart';
