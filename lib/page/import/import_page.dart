@@ -177,7 +177,7 @@ class _ImportPageState extends State<ImportPage> {
                                             Text(
                                                 "Created date : ${itemPlan[index].createdDate}"),
                                             Text(
-                                                "Qty Assets : ${itemPlan[index].qtyAssets}"),
+                                                "Qty  : ${itemPlan[index].qtyAssets}"),
                                           ],
                                         ),
                                       ],

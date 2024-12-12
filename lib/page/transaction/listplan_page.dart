@@ -215,7 +215,7 @@ class _ListPlanPageState extends State<ListPlanPage> {
                                                         alignment:
                                                             Alignment.center,
                                                         child: Container(
-                                                            width: 150,
+                                                            width: 110,
                                                             padding:
                                                                 const EdgeInsets
                                                                     .symmetric(

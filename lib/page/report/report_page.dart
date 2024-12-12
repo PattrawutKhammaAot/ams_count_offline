@@ -311,28 +311,25 @@ class _ReportPageState extends State<ReportPage> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Label(
-                            "${appLocalization.localizations.report_txt_uncheck} : ",
-                            color: AppColors.contentColorBlue,
-                          ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Label(
+                          "${appLocalization.localizations.report_txt_uncheck} :",
+                          color: AppColors.contentColorBlue,
                         ),
                       ),
                       Expanded(
-                          flex: 2,
                           child: TextFormField(
-                            textAlign: TextAlign.center,
-                            textAlignVertical: TextAlignVertical.bottom,
-                            style: TextStyle(fontSize: 26, color: Colors.black),
-                            controller: uncheck,
-                            readOnly: true,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(4),
-                                filled: true,
-                                fillColor: Colors.transparent),
-                          )),
+                        textAlign: TextAlign.center,
+                        textAlignVertical: TextAlignVertical.bottom,
+                        style: TextStyle(fontSize: 26, color: Colors.black),
+                        controller: uncheck,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(4),
+                            filled: true,
+                            fillColor: Colors.transparent),
+                      )),
                       Expanded(
                         child: GestureDetector(
                           onTap: () => _viewItem(StatusCheck.status_uncheck),
@@ -354,28 +351,25 @@ class _ReportPageState extends State<ReportPage> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Label(
-                            "${appLocalization.localizations.report_txt_check} : ",
-                            color: AppColors.contentColorBlue,
-                          ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Label(
+                          "${appLocalization.localizations.report_txt_check} : ",
+                          color: AppColors.contentColorBlue,
                         ),
                       ),
                       Expanded(
-                          flex: 2,
                           child: TextFormField(
-                            textAlign: TextAlign.center,
-                            textAlignVertical: TextAlignVertical.bottom,
-                            controller: checked,
-                            style: TextStyle(fontSize: 26),
-                            readOnly: true,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(4),
-                                filled: true,
-                                fillColor: Colors.transparent),
-                          )),
+                        textAlign: TextAlign.center,
+                        textAlignVertical: TextAlignVertical.bottom,
+                        controller: checked,
+                        style: TextStyle(fontSize: 26),
+                        readOnly: true,
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(4),
+                            filled: true,
+                            fillColor: Colors.transparent),
+                      )),
                       Expanded(
                         child: GestureDetector(
                           onTap: () => _viewItem(StatusCheck.status_checked),

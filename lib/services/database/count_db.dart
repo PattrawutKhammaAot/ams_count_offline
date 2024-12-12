@@ -180,7 +180,15 @@ class CountDB {
           itemReturn = await _insertNotINPlan(obj);
         }
       } else if (isAssetINPlan == StatusQuery.invalid) {
-        CustomBotToast.showWarning(appLocalization.localizations.no_data_found);
+        //Assets ไม่ได้อยู่ในการ Import
+        bool isConfirm = await showDialogConfirm(context,
+            title: appLocalization.localizations.warning_count_asset,
+            content:
+                appLocalization.localizations.warning_count_asset_not_in_plan,
+            type: TypeAlert.warning);
+        if (isConfirm) {
+          itemReturn = await _insertAssetWhenAssetNotInImported(obj);
+        }
       }
       return itemReturn;
     } catch (e, s) {
@@ -339,35 +347,64 @@ class CountDB {
     }
   }
 
-  // Future<CountModelEvent> checkStatusAsset1234(CountModelEvent obj) async {
-  //   CountModelEvent itemReturn = CountModelEvent();
-  //   final db = await appDb.database;
-  //   final checkStatusAssets = await db.query(tableName,
-  //       where:
-  //           "${ImportDB.field_asset} = ? AND ${ImportDB.field_plan} = ? AND ${ImportDB.field_status_check} = ?",
-  //       whereArgs: [obj.barcode, obj.plan, StatusCheck.status_checked],
-  //       limit: 1);
-  //   if (checkStatusAssets.isNotEmpty) {
-  //     //ถ้ามีข้อมูลในฐานข้อมูล
-  //     itemReturn = CountModelEvent(
-  //         plan: checkStatusAssets[0][ImportDB.field_plan].toString(),
-  //         barcode: checkStatusAssets[0][ImportDB.field_asset].toString(),
-  //         location: checkStatusAssets[0][ImportDB.field_location].toString(),
-  //         department:
-  //             checkStatusAssets[0][ImportDB.field_department].toString(),
-  //         costCenter: checkStatusAssets[0][ImportDB.field_costCenter] as int,
-  //         statusAsset:
-  //             checkStatusAssets[0][ImportDB.field_status_assets].toString(),
-  //         remark: checkStatusAssets[0][ImportDB.field_remark].toString(),
-  //         scanDate: checkStatusAssets[0][ImportDB.field_scan_date].toString(),
-  //         is_Success: true);
-  //   } else {
-  //     itemReturn = CountModelEvent(is_Success: false);
-  //     //ถ้าไม่มีข้อมูลในฐานข้อมูล
-  //   }
+  Future<ResponseCountModel> _insertAssetWhenAssetNotInImported(
+      CountModelEvent obj) async {
+    try {
+      ResponseCountModel itemReturn = ResponseCountModel(is_Success: false);
 
-  //   return itemReturn;
-  // }
+      final db = await appDb.database;
+      final qryPlan = await db.query(tableName,
+          where: "${ImportDB.field_plan} = ?", whereArgs: [obj.plan], limit: 1);
+      final insertNotInPlan = await db.insert(tableName, {
+        ImportDB.field_plan: obj.plan.toString(),
+        ImportDB.field_asset: obj.barcode,
+        ImportDB.field_costCenter: "",
+        ImportDB.field_description: "",
+        ImportDB.field_Capitalized_on: "",
+        ImportDB.field_location: "",
+        ImportDB.field_department: "",
+        ImportDB.field_asset_Owner: "",
+        ImportDB.field_qty: obj.qty,
+        ImportDB.field_status_assets: obj.statusAsset,
+        ImportDB.field_remark: obj.remark ?? "",
+        ImportDB.field_count_location: obj.location,
+        ImportDB.field_count_department: obj.department,
+        ImportDB.field_scan_date:
+            DateFormat('dd-MM-yyyy HH:mm').format(DateTime.now()),
+        ImportDB.field_status_check: StatusCheck.status_checked,
+        ImportDB.field_asset_not_in_plan: "YES",
+        ImportDB.field_status_plan: StatusCheck.status_count,
+        ImportDB.field_created_date:
+            qryPlan[0][ImportDB.field_created_date].toString(),
+      });
+      final result = await db.query(tableName,
+          where: "${ImportDB.field_asset} = ? AND ${ImportDB.field_plan} = ?",
+          whereArgs: [obj.barcode, obj.plan],
+          limit: 1);
+      if (result.isNotEmpty) {
+        itemReturn = ResponseCountModel(
+            asset: result[0][ImportDB.field_asset].toString(),
+            costCenter: result[0][ImportDB.field_costCenter].toString(),
+            department: result[0][ImportDB.field_department].toString(),
+            statusAsset: result[0][ImportDB.field_status_assets].toString(),
+            remark: result[0][ImportDB.field_remark].toString(),
+            scanDate: result[0][ImportDB.field_scan_date].toString(),
+            qty: result[0][ImportDB.field_qty].toString(),
+            cap_date: result[0][ImportDB.field_Capitalized_on].toString(),
+            check: result[0][ImportDB.field_status_check].toString(),
+            name: result[0][ImportDB.field_description].toString(),
+            is_Success: true);
+      }
+
+      await updateStatusPlan(obj);
+
+      return itemReturn;
+    } catch (e, s) {
+      print(e);
+      print(s);
+      return ResponseCountModel(is_Success: false);
+    }
+  }
 
   Future<ResponseCountModel> _insertNotINPlan(CountModelEvent obj) async {
     try {
