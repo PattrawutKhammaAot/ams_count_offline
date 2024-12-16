@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:count_offline/component/custom_botToast.dart';
 import 'package:count_offline/extension/color_extension.dart';
 import 'package:count_offline/main.dart';
@@ -44,7 +46,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          CustomBotToast.showWarning("Can't back this screen");
+          exit(0);
         }
       },
       child: Scaffold(

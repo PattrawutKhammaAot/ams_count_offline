@@ -3,6 +3,7 @@ import 'package:count_offline/main.dart';
 import 'package:count_offline/services/database/setting_db.dart';
 import 'package:count_offline/services/theme/storage_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingPage extends StatelessWidget {
   @override
@@ -131,6 +132,15 @@ class SettingPage extends StatelessWidget {
                 );
               },
             ),
+            Divider(),
+            FutureBuilder(
+                future: PackageInfo.fromPlatform(),
+                builder: (context, snapshot) {
+                  return ListTile(
+                    leading: Icon(Icons.app_settings_alt, color: Colors.blue),
+                    title: Text("Version : ${snapshot.data?.version}"),
+                  );
+                }),
             Divider(),
           ],
         ),
