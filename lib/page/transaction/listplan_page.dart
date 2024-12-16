@@ -114,7 +114,7 @@ class _ListPlanPageState extends State<ListPlanPage> {
                                   children: [
                                     Expanded(
                                       child: CustomRangePoint(
-                                        color: Colors.white,
+                                        color: Colors.lightGreen,
                                         valueRangePointer: itemSum.checked,
                                         colorText: AppColors.contentColorBlue,
                                         allItem: itemSum.allitem,

@@ -74,16 +74,27 @@ class ImportDB {
   Future<void> saveCounter(int counter) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('import_counter', counter);
+    await prefs.setString(
+        'last_import_date', DateFormat('yyyyMMdd').format(DateTime.now()));
   }
 
   Future<int> loadCounter() async {
     final prefs = await SharedPreferences.getInstance();
+    final String? lastImportDate = prefs.getString('last_import_date');
+    final String currentDate = DateFormat('yyyyMMdd').format(DateTime.now());
+
+    if (lastImportDate == null || lastImportDate != currentDate) {
+      await clearCounter();
+      return 1; // Reset counter if it's a new day
+    }
+
     return prefs.getInt('import_counter') ?? 1; // Default value if not set
   }
 
   Future<void> clearCounter() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('import_counter');
+    await prefs.remove('last_import_date');
   }
 
   Future<void> importFileExcel() async {

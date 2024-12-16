@@ -226,6 +226,8 @@ class _EditDataCountPageState extends State<EditDataCountPage> {
                         ),
                         Expanded(
                             child: Custominput(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 0),
                                 labelText: "Scan Date",
                                 readOnly: true,
                                 controller: scanDateController)),

@@ -265,6 +265,7 @@ class CountDB {
                     "YES"
                 ? "YES"
                 : "NO",
+            ImportDB.field_qty: "1"
           },
           where:
               ImportDB.field_asset + " = ? AND " + ImportDB.field_plan + " = ?",
@@ -364,7 +365,7 @@ class CountDB {
         ImportDB.field_location: "",
         ImportDB.field_department: "",
         ImportDB.field_asset_Owner: "",
-        ImportDB.field_qty: obj.qty,
+        ImportDB.field_qty: "1",
         ImportDB.field_status_assets: obj.statusAsset,
         ImportDB.field_remark: obj.remark ?? "",
         ImportDB.field_count_location: obj.location,
@@ -430,7 +431,7 @@ class CountDB {
               queryAssetOutPlan[0][ImportDB.field_department].toString(),
           ImportDB.field_asset_Owner:
               queryAssetOutPlan[0][ImportDB.field_asset_Owner].toString(),
-          ImportDB.field_qty: obj.qty,
+          ImportDB.field_qty: "1",
           ImportDB.field_status_assets: obj.statusAsset,
           ImportDB.field_remark: obj.remark ?? "",
           ImportDB.field_count_location: obj.location,

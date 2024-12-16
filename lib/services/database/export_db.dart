@@ -42,7 +42,6 @@ class ExportDB {
       // Create Excel file
       final xlsio.Workbook workbook = xlsio.Workbook();
       final xlsio.Worksheet sheet = workbook.worksheets[0];
-      await exportSheet2Image(workbook, plan);
 
       final headers = [
         'Plan',
@@ -106,24 +105,18 @@ class ExportDB {
           );
           Uint8List? imageBytes;
           var imagesName;
+          List<String> imagePaths = [];
 
           if (images.isNotEmpty) {
-            imagesName = images.firstWhere(
-                (image) =>
-                    image[GalleryDB.field_asset] ==
-                    assets[i][ImportDB.field_asset],
-                orElse: () => <String, Object?>{})[GalleryDB.filed_name_image];
-            var imageFilePath = images.firstWhere(
-              (image) =>
-                  image[GalleryDB.field_asset] ==
-                  assets[i][ImportDB.field_asset],
-              orElse: () => <String, Object?>{},
-            )[GalleryDB.field_image_file_path];
+            for (var image in images) {
+              imagesName = image[GalleryDB.filed_name_image];
+              var imageFilePath = image[GalleryDB.field_image_file_path];
 
-            if (imageFilePath != null && imageFilePath is String) {
-              File imageFile = File(imageFilePath);
-              if (await imageFile.exists()) {
+              if (imageFilePath != null && imageFilePath is String) {
+                File imageFile = File(imageFilePath);
                 imageBytes = await imageFile.readAsBytes();
+                imagePaths
+                    .add(await exportImageToFolder(imageBytes, imagesName));
               }
             }
           }
@@ -174,12 +167,9 @@ class ExportDB {
               .setText(assets[i][ImportDB.field_remark]?.toString() ?? '');
           sheet.getRangeByIndex(currentRow, 15).setText(
               assets[i][ImportDB.field_asset_not_in_plan]?.toString() ?? '');
-          // Insert image if it exists
-          if (imageBytes != null) {
-            final String fileName = imagesName;
-            final String filePath =
-                await exportImageToFolder(imageBytes, fileName);
-
+          // Insert image path if it exists
+          if (imagePaths.isNotEmpty) {
+            final String filePath = imagePaths.first;
             final addressLink =
                 "$gettingPath:/${filePath.substring(filePath.indexOf('ams_export'))}";
 
@@ -240,7 +230,7 @@ class ExportDB {
 
       // Dismiss loading
       EasyLoading.showSuccess(
-          '${appLocalization.localizations.export_to} $text_name $baseFileName($fileIndex)$fileExtension',
+          '${appLocalization.localizations.export_to} $text_name $baseFileName$fileExtension',
           maskType: EasyLoadingMaskType.black);
     } catch (e, s) {
       EasyLoading.showError('$e');

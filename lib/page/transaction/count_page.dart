@@ -79,6 +79,7 @@ class _CountPageState extends State<CountPage> {
   Future onChangeValue(bool isTakeBarcode) async {
     ResponseCountModel item = ResponseCountModel();
     selectedStatus = "ปกติ";
+
     if (isTakeBarcode) {
       item = await CountDB().readQrCodeAndBarcode(
         context,
@@ -107,12 +108,17 @@ class _CountPageState extends State<CountPage> {
 
     assetNoController.text = item.asset ?? "";
     nameController.text = item.name ?? "";
-    costCenterController.text = item.costCenter ?? "";
+    costCenterController.text = (item.costCenter == null ||
+            item.costCenter == "null" ||
+            item.costCenter == "")
+        ? ""
+        : item.costCenter!;
     departmentController.text = item.department ?? "";
     qtyController.text =
         (item.qty == null || item.qty == "null" || item.qty == "")
             ? ""
             : item.qty!;
+
     capDateController.text = (item.cap_date == null ||
             item.cap_date == "null" ||
             item.cap_date == "")
@@ -295,6 +301,8 @@ class _CountPageState extends State<CountPage> {
                         ),
                         Expanded(
                             child: Custominput(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 0),
                                 labelText: "Scan Date",
                                 readOnly: true,
                                 controller: scanDateController)),

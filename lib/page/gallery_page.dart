@@ -92,95 +92,104 @@ class _GalleryPageState extends State<GalleryPage> {
         child: _imageList.isNotEmpty
             ? GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
+                    crossAxisCount: 2, mainAxisExtent: 250),
                 itemCount: _imageList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () async {},
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(2.0),
                       child: Card(
                           elevation: 10,
                           child: Column(
                             children: [
                               Expanded(
+                                  flex: 3,
                                   child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Card(
-                                  elevation: 0,
-                                  color: Colors.white,
-                                  shape: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.white)),
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(2.0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                content: Container(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: Column(
-                                                    children: [
-                                                      Expanded(
-                                                        child: PhotoView(
-                                                          imageProvider:
-                                                              FileImage(File(
-                                                                  "${_imageList[index].imageFile}")),
-                                                        ),
-                                                      ),
-                                                      Label(
-                                                        "${_imageList[index].plan} : ${_imageList[index].asset} ",
-                                                        color: Colors.black,
-                                                      ),
-                                                      Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .end,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Card(
+                                      elevation: 0,
+                                      color: Colors.white,
+                                      shape: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white)),
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    content: Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: Column(
                                                         children: [
-                                                          ElevatedButton(
-                                                              style: ButtonStyle(
-                                                                  backgroundColor:
-                                                                      MaterialStateProperty.all(
-                                                                          AppColors
+                                                          Expanded(
+                                                            child: PhotoView(
+                                                              imageProvider:
+                                                                  FileImage(File(
+                                                                      "${_imageList[index].imageFile}")),
+                                                            ),
+                                                          ),
+                                                          Label(
+                                                            "${_imageList[index].plan} : ${_imageList[index].asset} ",
+                                                            color: Colors.black,
+                                                          ),
+                                                          Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              ElevatedButton(
+                                                                  style: ButtonStyle(
+                                                                      backgroundColor:
+                                                                          MaterialStateProperty.all(AppColors
                                                                               .contentColorBlue)),
-                                                              onPressed: () =>
-                                                                  Navigator.pop(
-                                                                      context),
-                                                              child:
-                                                                  Label("OK"))
+                                                                  onPressed: () =>
+                                                                      Navigator.pop(
+                                                                          context),
+                                                                  child: Label(
+                                                                      "OK"))
+                                                            ],
+                                                          )
                                                         ],
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
                                               );
                                             },
-                                          );
-                                        },
-                                        child: Image.file(File(
-                                            "${_imageList[index].imageFile}")),
-                                      )),
-                                ),
-                              )),
+                                            child: Image.file(
+                                              File(
+                                                  "${_imageList[index].imageFile}"),
+                                            ),
+                                          )),
+                                    ),
+                                  )),
                               Card(
                                   color: Colors.white,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
+                                        Label(
+                                          "${_imageList[index].plan}",
+                                          fontSize: 14,
+                                          color: AppColors.contentColorBlue,
+                                        ),
+                                        Divider(),
                                         Label(
                                           "${_imageList[index].asset}",
                                           fontSize: 14,

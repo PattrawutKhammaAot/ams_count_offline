@@ -99,13 +99,17 @@ class _ViewImportPageState extends State<ViewImportPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                'Description : ${itemList[index].description}'),
-                            Text('Cost Center : ${itemList[index].costCenter}'),
+                                'Description : ${itemList[index].description.toString() == 'null' ? '' : itemList[index].description}'),
                             Text(
-                                'Capitalized On : ${itemList[index].capitalizedOn}'),
-                            Text('Location : ${itemList[index].location}'),
-                            Text('Department : ${itemList[index].department}'),
-                            Text('Asset Owner : ${itemList[index].assetOwner}'),
+                                'Cost Center : ${itemList[index].costCenter.toString() == 'null' ? '' : itemList[index].costCenter}'),
+                            Text(
+                                'Capitalized On : ${itemList[index].capitalizedOn.toString() == 'null' ? '' : itemList[index].capitalizedOn}'),
+                            Text(
+                                'Location : ${itemList[index].location.toString() == 'null' ? '' : itemList[index].location}'),
+                            Text(
+                                'Department : ${itemList[index].department.toString() == 'null' ? '' : itemList[index].department}'),
+                            Text(
+                                'Asset Owner : ${itemList[index].assetOwner.toString() == 'null' ? '' : itemList[index].assetOwner}'),
                             Text(
                                 'Created Date : ${itemList[index].createdDate}'),
                           ],

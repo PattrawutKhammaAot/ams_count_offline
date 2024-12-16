@@ -44,7 +44,7 @@ class GalleryDB {
 
       // สร้างพาธสำหรับเก็บรูปภาพ
       final String imageFileName =
-          "${assetValue}-${DateFormat('HHmmss').format(DateTime.now())}.jpg";
+          "$planValue-${assetValue}-${DateFormat('HHmmss').format(DateTime.now())}.jpg";
       final String newImagePath = '$appDocPath/$imageFileName';
 
       // ตรวจสอบว่าไฟล์รูปภาพมีอยู่และไม่ว่างเปล่า
@@ -61,51 +61,23 @@ class GalleryDB {
       // คัดลอกรูปภาพไปยังพาธใหม่
       await fileImage.copy(newImagePath);
 
-      var checkInDB = await db.query(field_tableName,
-          where: "$field_asset = ? AND $field_plan = ?",
-          whereArgs: [assetValue, planValue],
-          limit: 1);
+      var result = await db.insert(
+        field_tableName, // Table name
+        {
+          filed_name_image: imageFileName,
+          field_plan: planValue,
+          field_asset: assetValue,
+          field_image_file_path: newImagePath, // Store the path as a string
+          field_created_date:
+              DateFormat('dd-MM-yyyy HH:mm').format(DateTime.now()),
+        }, // Column names and values
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
 
-      if (checkInDB.isEmpty) {
-        var result = await db.insert(
-          field_tableName, // Table name
-          {
-            filed_name_image: imageFileName,
-            field_plan: planValue,
-            field_asset: assetValue,
-            field_image_file_path: newImagePath, // Store the path as a string
-            field_created_date:
-                DateFormat('dd-MM-yyyy HH:mm').format(DateTime.now()),
-          }, // Column names and values
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
-
-        if (result != 0) {
-          CustomBotToast.showSuccess(
-              appLocalization.localizations.upload_image_success);
-          return true;
-        }
-      } else {
-        // update
-        var result = await db.update(
-          field_tableName, // Table name
-          {
-            filed_name_image: imageFileName,
-            field_plan: planValue,
-            field_asset: assetValue,
-            field_image_file_path: newImagePath, // Store the path as a string
-            field_created_date:
-                DateFormat('dd-MM-yyyy HH:mm').format(DateTime.now()),
-          }, // Column names and values
-          where: "$field_asset = ? AND $field_plan = ?",
-          whereArgs: [assetValue, planValue],
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
-        if (result != 0) {
-          CustomBotToast.showSuccess(
-              appLocalization.localizations.update_image_success);
-          return true;
-        }
+      if (result != 0) {
+        CustomBotToast.showSuccess(
+            appLocalization.localizations.upload_image_success);
+        return true;
       }
 
       return false;
