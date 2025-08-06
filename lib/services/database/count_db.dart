@@ -534,10 +534,7 @@ class CountDB {
         where: "${ImportDB.field_asset} = ? AND ${ImportDB.field_plan} = ?",
         whereArgs: [obj.barcode, obj.plan]);
 
-    if (queryAssetOutPlan != 0) {
-      return true;
-    }
-    return false;
+    return queryAssetOutPlan != 0 ? true : false;
   }
 
   //////==================================EditPage=============================//////////////////////

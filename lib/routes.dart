@@ -3,7 +3,7 @@ import 'package:count_offline/page/transaction/count_page.dart';
 import 'package:count_offline/page/gallery_page.dart';
 import 'package:count_offline/page/import/import_page.dart';
 import 'package:count_offline/page/import/view_import_page.dart';
-import 'package:count_offline/page/loading_page.dart';
+import 'package:count_offline/page/home_page.dart';
 import 'package:count_offline/page/report/report_page.dart';
 import 'package:count_offline/page/transaction/listplan_page.dart';
 import 'package:flutter/material.dart';
