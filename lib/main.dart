@@ -1,6 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:count_offline/page/dashboard_page.dart';
-import 'package:count_offline/page/loading_page.dart';
+import 'package:count_offline/page/home_page.dart';
 import 'package:count_offline/routes.dart';
 import 'package:count_offline/services/database/export_db.dart';
 import 'package:count_offline/services/database/sqlite_db.dart';
@@ -20,9 +20,11 @@ final botToast = BotToastInit();
 final appLocalization = LocalizationService();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Permission.manageExternalStorage.request();
-  await Permission.storage.request();
-  await Permission.camera.request();
+  await [
+    Permission.manageExternalStorage,
+    Permission.storage,
+    Permission.camera
+  ].request();
 
   await ExportDB().createFolderInDocument();
   await appDb.initializeDatabase();
