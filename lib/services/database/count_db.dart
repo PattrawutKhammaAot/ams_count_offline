@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:barcode_scan2/barcode_scan2.dart';
-
 import 'package:count_offline/component/custom_botToast.dart';
 import 'package:count_offline/main.dart';
 import 'package:count_offline/model/count/countModelEvent.dart';
@@ -579,22 +577,22 @@ class CountDB {
   Future<ResponseCountModel> readQrCodeAndBarcode(
       BuildContext context, CountModelEvent obj) async {
     ResponseCountModel itemReturn = ResponseCountModel();
-    var barcodeResult = await BarcodeScanner.scan();
+    // var barcodeResult = await BarcodeScanner.scan();
 
-    if (barcodeResult.rawContent.isNotEmpty &&
-        barcodeResult.rawContent != '-1') {
-      itemReturn = await scanCount(
-        CountModelEvent(
-          barcode: barcodeResult.rawContent.toUpperCase(),
-          plan: obj.plan,
-          location: obj.location,
-          department: obj.department,
-          statusAsset: obj.statusAsset,
-          qty: obj.qty,
-        ),
-        context,
-      );
-    }
+    // if (barcodeResult.rawContent.isNotEmpty &&
+    //     barcodeResult.rawContent != '-1') {
+    //   itemReturn = await scanCount(
+    //     CountModelEvent(
+    //       barcode: barcodeResult.rawContent.toUpperCase(),
+    //       plan: obj.plan,
+    //       location: obj.location,
+    //       department: obj.department,
+    //       statusAsset: obj.statusAsset,
+    //       qty: obj.qty,
+    //     ),
+    //     context,
+    //   );
+    // }
     return itemReturn;
   }
 }

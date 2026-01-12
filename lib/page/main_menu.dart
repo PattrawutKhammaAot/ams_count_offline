@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../services/theme/theme_manager.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});

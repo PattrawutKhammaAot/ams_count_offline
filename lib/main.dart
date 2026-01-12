@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:count_offline/l10n/app_localizations.dart';
 import 'package:count_offline/page/dashboard_page.dart';
 import 'package:count_offline/page/home_page.dart';
 import 'package:count_offline/routes.dart';
@@ -11,7 +12,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 DbSqlite appDb = DbSqlite();
 
