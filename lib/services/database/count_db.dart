@@ -577,22 +577,33 @@ class CountDB {
   Future<ResponseCountModel> readQrCodeAndBarcode(
       BuildContext context, CountModelEvent obj) async {
     ResponseCountModel itemReturn = ResponseCountModel();
-    // var barcodeResult = await BarcodeScanner.scan();
 
-    // if (barcodeResult.rawContent.isNotEmpty &&
-    //     barcodeResult.rawContent != '-1') {
-    //   itemReturn = await scanCount(
-    //     CountModelEvent(
-    //       barcode: barcodeResult.rawContent.toUpperCase(),
-    //       plan: obj.plan,
-    //       location: obj.location,
-    //       department: obj.department,
-    //       statusAsset: obj.statusAsset,
-    //       qty: obj.qty,
-    //     ),
-    //     context,
-    //   );
-    // }
+    try {
+      // Navigate to QR Code Scanner Page and wait for result
+      final scannedCode = await Navigator.of(context).push<String>(
+        MaterialPageRoute(
+          builder: (context) => const QRCodeViewPage(),
+        ),
+      );
+
+      if (scannedCode != null && scannedCode.isNotEmpty) {
+        itemReturn = await scanCount(
+          CountModelEvent(
+            barcode: scannedCode.toUpperCase(),
+            plan: obj.plan,
+            location: obj.location,
+            department: obj.department,
+            statusAsset: obj.statusAsset,
+            qty: obj.qty,
+          ),
+          context,
+        );
+      }
+    } catch (e) {
+      print('Error reading QR Code: $e');
+      itemReturn = ResponseCountModel(is_Success: false);
+    }
+
     return itemReturn;
   }
 }
